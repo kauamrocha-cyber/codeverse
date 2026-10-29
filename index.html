@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeVerse | Aprenda Programação</title>
+
+<style>
+:root {
+    --fundo: #0b1020;
+    --painel: #111a2e;
+    --painel2: #17233b;
+    --texto: #edf2ff;
+    --texto2: #a8b4d0;
+    --azul: #6c8cff;
+    --verde: #43e0ad;
+    --borda: #293754;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 255px;
+    background: #0e1629;
+    border-right: 1px solid var(--borda);
+    padding: 22px 14px;
+    position: fixed;
+    inset: 0 auto 0 0;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    padding: 8px;
+    margin-bottom: 25px;
+}
+
+.logo span {
+    color: var(--azul);
+}
+
+.grupo-menu {
+    color: var(--texto2);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    margin: 24px 8px 10px;
+}
+
+.menu-item {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: 9px;
+    padding: 12px;
+    margin: 4px 0;
+    background: transparent;
+    color: var(--texto2);
+    text-align: left;
+    transition: .2s;
+}
+
+.menu-item:hover,
+.menu-item.ativo {
+    color: white;
+    background: var(--painel2);
+}
+
+.menu-item.ativo {
+    border-left: 3px solid var(--azul);
+}
+
+main {
+    margin-left: 255px;
+    width: calc(100% - 255px);
+    padding: 28px;
+    max-width: 1600px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.pesquisa {
+    background: var(--painel);
+    border: 1px solid var(--borda);
+    color: white;
+    padding: 12px 15px;
+    border-radius: 10px;
+    width: min(420px, 100%);
+}
+
+.botao {
+    background: var(--azul);
+    border: 0;
+    color: white;
+    border-radius: 9px;
+    padding: 11px 16px;
+    font-weight: bold;
+}
+
+.botao:hover {
+    filter: brightness(1.12);
+}
+
+.botao-secundario {
+    background: var(--painel2);
+    border: 1px solid var(--borda);
+    color: white;
+    border-radius: 9px;
+    padding: 10px 14px;
+}
+
+.hero {
+    background: linear-gradient(125deg, #192b50, #252050, #123b48);
+    border: 1px solid #33436b;
+    border-radius: 18px;
+    padding: 35px;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    font-size: clamp(27px, 4vw, 43px);
+    margin: 12px 0;
+}
+
+.hero p {
+    color: #d0daf2;
+    max-width: 700px;
+    line-height: 1.7;
+}
+
+.tag {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #ffffff18;
+    color: #dce6ff;
+    font-size: 12px;
+}
+
+.grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 20px 0 30px;
+}
+
+.card {
+    background: var(--painel);
+    border: 1px solid var(--borda);
+    padding: 20px;
+    border-radius: 14px;
+    min-width: 0;
+}
+
+.card h3 {
+    margin-top: 5px;
+}
+
+.card p,
+.texto-secundario {
+    color: var(--texto2);
+    line-height: 1.65;
+}
+
+.numero {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.barra {
+    background: #27344d;
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+    margin: 12px 0;
+}
+
+.barra div {
+    background: var(--verde);
+    height: 100%;
+    width: 0;
+    transition: width .3s;
+}
+
+.secao {
+    display: none;
+}
+
+.secao.ativa {
+    display: block;
+}
+
+.curso-card {
+    cursor: pointer;
+    transition: .2s;
+}
+
+.curso-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--azul);
+}
+
+.lista-aulas {
+    display: grid;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.aula {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--painel);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+}
+
+.aula button {
+    flex-shrink: 0;
+}
+
+.codigo {
+    position: relative;
+    background: #070c17;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    margin: 16px 0;
+    overflow: hidden;
+}
+
+.codigo pre {
+    padding: 20px;
+    overflow-x: auto;
+    color: #a8f0c6;
+    line-height: 1.7;
+    white-space: pre;
+}
+
+.codigo button {
+    margin: 10px;
+}
+
+.explicacao {
+    background: #16253b;
+    border-left: 4px solid var(--azul);
+    padding: 15px;
+    border-radius: 6px;
+    line-height: 1.7;
+    margin: 16px 0;
+}
+
+.sucesso {
+    color: var(--verde);
+}
+
+.aviso {
+    color: #ffd37b;
+}
+
+.campo {
+    width: 100%;
+    background: #0b1325;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    padding: 12px;
+    color: white;
+    margin: 8px 0 15px;
+}
+
+.linha {
+    border: 0;
+    border-top: 1px solid var(--borda);
+    margin: 25px 0;
+}
+
+.badge {
+    color: var(--verde);
+    font-size: 12px;
+}
+
+footer {
+    margin-top: 45px;
+    border-top: 1px solid var(--borda);
+    padding-top: 20px;
+    color: var(--texto2);
+    font-size: 13px;
+}
+
+#menuMobile {
+    display: none;
+}
+
+.vazio {
+    color: var(--texto2);
+    padding: 25px;
+    text-align: center;
+}
+
+.wiki-filtros {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) minmax(220px, 2fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.wiki-artigo {
+    border-left: 3px solid var(--azul);
+}
+
+.wiki-artigo h3 {
+    margin-top: 0;
+}
+
+.wiki-artigo code {
+    color: var(--verde);
+}
+
+.wiki-codigo {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform .25s;
+    }
+
+    .sidebar.aberta {
+        transform: translateX(0);
+    }
+
+    main {
+        margin-left: 0;
+        width: 100%;
+        padding: 18px;
+    }
+
+    #menuMobile {
+        display: inline-block;
+    }
+
+    .topbar {
+        flex-wrap: wrap;
+    }
+
+    .hero {
+        padding: 23px;
+    }
+
+    .wiki-filtros {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+    <div class="logo">⚡ Code<span>Verse</span></div>
+
+    <div class="grupo-menu">PRINCIPAL</div>
+    <button class="menu-item ativo" data-pagina="inicio">🏠 Início</button>
+    <button class="menu-item" data-pagina="trilhas">🛤️ Trilhas de estudo</button>
+    <button class="menu-item" data-pagina="explorar">📚 Todas as aulas</button>
+    <button class="menu-item" data-pagina="wiki">📖 Wiki das linguagens</button>
+
+    <div class="grupo-menu">LINGUAGENS</div>
+    <button class="menu-item" data-curso="Python">🐍 Python</button>
+    <button class="menu-item" data-curso="HTML">🌐 HTML</button>
+    <button class="menu-item" data-curso="CSS">🎨 CSS</button>
+    <button class="menu-item" data-curso="Java">☕ Java</button>
+    <button class="menu-item" data-curso="JavaScript">🟨 JavaScript</button>
+    <button class="menu-item" data-curso="C++">⚙️ C++</button>
+    <button class="menu-item" data-curso="Lua">🌙 Lua</button>
+
+    <div class="grupo-menu">PRÁTICA</div>
+    <button class="menu-item" data-pagina="exercicios">🧠 Exercícios</button>
+    <button class="menu-item" data-pagina="laboratorio">💻 Laboratório</button>
+    <button class="menu-item" data-pagina="favoritos">⭐ Favoritos</button>
+
+    <div class="grupo-menu">ACOMPANHAMENTO</div>
+    <button class="menu-item" data-pagina="progresso">📊 Meu progresso</button>
+    <button class="menu-item" data-pagina="glossario">📖 Glossário</button>
+</aside>
+
+<main>
+    <header class="topbar">
+        <button class="botao-secundario" id="menuMobile">☰ Menu</button>
+        <input class="pesquisa" id="pesquisa" placeholder="🔎 Pesquisar linguagens, aulas e conceitos...">
+        <button class="botao-secundario" id="tema">☀️ Tema</button>
+    </header>
+
+    <!-- INÍCIO -->
+    <section class="secao ativa" id="inicio">
+        <div class="hero">
+            <span class="tag">SUA JORNADA COMEÇA AQUI</span>
+            <h1>Aprenda programação do zero. 🚀</h1>
+            <p>
+                Explore diferentes linguagens, aprenda conceitos fundamentais,
+                pratique com exercícios e construa seus próprios projetos.
+                Estude no seu ritmo e acompanhe seu progresso.
+            </p>
+            <button class="botao" data-ir="trilhas">Começar a aprender →</button>
+        </div>
+
+        <h2>Seu painel de estudos</h2>
+        <div class="grade">
+            <article class="card">
+                <div class="texto-secundario">Aulas concluídas</div>
+                <div class="numero" id="totalConcluidas">0</div>
+                <div class="barra"><div id="barraGeral"></div></div>
+                <div class="texto-secundario" id="percentualGeral">Continue aprendendo!</div>
+            </article>
+
+            <article class="card">
+                <div class="texto-secundario">Cursos disponíveis</div>
+                <div class="numero" id="totalCursos">7</div>
+                <p>Python, Java, JavaScript, HTML, CSS, C++ e Lua.</p>
+            </article>
+
+            <article class="card">
+                <div class="texto-secundario">Sua próxima meta</div>
+                <div class="numero">🎯</div>
+                <p>Conclua uma aula e avance na sua trilha.</p>
+                <button class="botao-secundario" data-ir="trilhas">Ver trilhas</button>
+            </article>
+        </div>
+
+        <h2>Escolha uma linguagem</h2>
+        <div class="grade" id="cardsInicio"></div>
+    </section>
+
+    <!-- TRILHAS -->
+    <section class="secao" id="trilhas">
+        <h1>🛤️ Trilhas de aprendizado</h1>
+        <p class="texto-secundario">
+            Siga as etapas na ordem sugerida. Cada trilha começa com os fundamentos
+            e avança gradualmente para assuntos mais complexos.
+        </p>
+        <div class="grade" id="cardsTrilhas"></div>
+    </section>
+
+    <!-- EXPLORAR -->
+    <section class="secao" id="explorar">
+        <h1>📚 Biblioteca de aulas</h1>
+        <p class="texto-secundario">Pesquise um assunto ou escolha uma linguagem.</p>
+        <div class="grade" id="biblioteca"></div>
+    </section>
+
+    <!-- CURSO -->
+    <section class="secao" id="curso">
+        <button class="botao-secundario" data-ir="trilhas">← Voltar às trilhas</button>
+        <div id="conteudoCurso"></div>
+    </section>
+
+    <!-- AULA -->
+    <section class="secao" id="aula">
+        <button class="botao-secundario" id="voltarCurso">← Voltar ao curso</button>
+        <div id="conteudoAula"></div>
+    </section>
+
+    <!-- EXERCÍCIOS -->
+    <section class="secao" id="exercicios">
+        <h1>🧠 Centro de exercícios</h1>
+        <p class="texto-secundario">
+            Teste seus conhecimentos. Tente resolver antes de consultar a explicação.
+        </p>
+
+        <div class="card">
+            <span class="tag">NÍVEL INICIANTE</span>
+            <h2>Desafio 1 — Variáveis em Python</h2>
+            <p>Qual será o resultado do código a seguir?</p>
+            <div class="codigo"><pre>idade = 16
+ano = 2026
+print(ano - idade)</pre></div>
+
+            <label for="resposta1">Sua resposta:</label>
+            <input class="campo" id="resposta1" type="number" placeholder="Digite um número">
+            <button class="botao" id="verificar1">Verificar resposta</button>
+            <p id="resultado1" aria-live="polite"></p>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+            <span class="tag">NÍVEL INICIANTE</span>
+            <h2>Desafio 2 — HTML</h2>
+            <p>Qual elemento HTML é usado para criar o título principal de uma página?</p>
+            <select class="campo" id="resposta2">
+                <option value="">Escolha uma resposta</option>
+                <option value="p">&lt;p&gt;</option>
+                <option value="h1">&lt;h1&gt;</option>
+                <option value="img">&lt;img&gt;</option>
+                <option value="table">&lt;table&gt;</option>
+            </select>
+            <button class="botao" id="verificar2">Verificar resposta</button>
+            <p id="resultado2" aria-live="polite"></p>
+        </div>
+    </section>
+
+    <!-- LABORATÓRIO -->
+    <section class="secao" id="laboratorio">
+        <h1>💻 Laboratório de código</h1>
+        <p class="texto-secundario">
+            Escreva um exemplo em Python e execute-o diretamente no navegador.
+            Este interpretador é uma simulação limitada: não executa todo o Python.
+        </p>
+
+        <div class="card">
+            <label for="codigoPython">Seu código Python:</label>
+            <textarea class="campo" id="codigoPython" rows="9" spellcheck="false">nome = "Programador"
+print("Olá,", nome)
+print(2 + 3)</textarea>
+
+            <button class="botao" id="executarPython">▶ Executar exemplo</button>
+            <button class="botao-secundario" id="limparPython">Limpar saída</button>
+
+            <h3>Saída</h3>
+            <pre id="saidaPython" class="codigo" style="padding:18px;white-space:pre-wrap">O resultado aparecerá aqui.</pre>
+
+            <div class="explicacao">
+                <strong>Limitação:</strong> o laboratório aceita apenas um subconjunto
+                de comandos simples, como print(), variáveis e operações aritméticas.
+                Ele não é um interpretador Python completo.
+            </div>
+        </div>
+    </section>
+
+    <!-- FAVORITOS -->
+    <section class="secao" id="favoritos">
+        <h1>⭐ Meus favoritos</h1>
+        <p class="texto-secundario">Guarde aulas para encontrá-las rapidamente.</p>
+        <div id="listaFavoritos"></div>
+    </section>
+
+    <!-- PROGRESSO -->
+    <section class="secao" id="progresso">
+        <h1>📊 Meu progresso</h1>
+        <p class="texto-secundario">
+            Acompanhe suas aulas concluídas em cada linguagem.
+        </p>
+        <div class="grade" id="painelProgresso"></div>
+        <button class="botao-secundario" id="exportarProgresso">Exportar progresso em JSON</button>
+        <button class="botao-secundario" id="reiniciarProgresso">Reiniciar progresso</button>
+        <p class="texto-secundario">O progresso fica salvo neste navegador.</p>
+    </section>
+
+    <!-- GLOSSÁRIO -->
+    <section class="secao" id="glossario">
+        <h1>📖 Glossário de programação</h1>
+        <input class="campo" id="pesquisaGlossario" placeholder="Pesquisar um termo...">
+        <div id="listaGlossario"></div>
+    </section>
+
+    <!-- WIKI -->
+    <section class="secao" id="wiki">
+        <h1>📚 Wiki das linguagens</h1>
+        <p class="texto-secundario">
+            Consulte um guia de referência por linguagem: para que serve, como
+            começar, conceitos importantes, exemplos e próximos passos.
+        </p>
+        <div class="wiki-filtros">
+            <label>
+                <span class="texto-secundario">Linguagem</span>
+                <select class="campo" id="seletorWiki" aria-label="Escolha uma linguagem para a wiki"></select>
+            </label>
+            <label>
+                <span class="texto-secundario">Pesquisar na wiki</span>
+                <input class="campo" id="pesquisaWiki" placeholder="Ex.: tipos, ambiente, funções...">
+            </label>
+        </div>
+        <div id="conteudoWiki"></div>
+    </section>
+
+    <footer>
+        <strong>CodeVerse</strong> — Aprender, praticar e evoluir.
+        <br>Material educacional para quem está começando a programar.
+    </footer>
+</main>
+</div>
+
+<script>
+const cursos = {
+    Python: {
+        emoji: "🐍",
+        cor: "#3776ab",
+        descricao: "Uma linguagem versátil para automação, dados, aplicações e inteligência artificial.",
+        aulas: [
+            ["Primeiros passos", "Iniciante", "O que é Python e como preparar seu ambiente."],
+            ["Variáveis e tipos", "Iniciante", "Armazene textos, números e valores lógicos."],
+            ["Entrada e saída", "Iniciante", "Use input() para receber dados e print() para mostrar resultados."],
+            ["Operadores", "Iniciante", "Aprenda operações aritméticas, comparações e operadores lógicos."],
+            ["Condições", "Iniciante", "Tome decisões com if, elif e else."],
+            ["Laço while", "Iniciante", "Repita comandos enquanto uma condição for verdadeira."],
+            ["Laço for", "Iniciante", "Percorra sequências usando for e range()."],
+            ["Listas", "Intermediário", "Armazene vários elementos em uma coleção ordenada."],
+            ["Tuplas e conjuntos", "Intermediário", "Conheça coleções imutáveis e conjuntos sem duplicatas."],
+            ["Dicionários", "Intermediário", "Organize informações em pares de chave e valor."],
+            ["Funções", "Intermediário", "Crie funções com def, parâmetros e return."],
+            ["Módulos e bibliotecas", "Intermediário", "Reutilize código com import."],
+            ["Tratamento de erros", "Intermediário", "Use try, except e finally."],
+            ["Arquivos", "Intermediário", "Leia e grave informações em arquivos."],
+            ["Programação orientada a objetos", "Avançado", "Crie classes, objetos, atributos e métodos."],
+            ["Herança e polimorfismo", "Avançado", "Reutilize e especialize comportamentos de classes."],
+            ["Geradores e decoradores", "Avançado", "Conheça recursos avançados da linguagem."],
+            ["Projeto final", "Projeto", "Construa uma aplicação que reúna os conhecimentos anteriores."]
+        ]
+    },
+
+    HTML: {
+        emoji: "🌐",
+        cor: "#e76f3c",
+        descricao: "Aprenda a estruturar páginas web com textos, imagens, links e formulários.",
+        aulas: [
+            ["Como funciona a web", "Iniciante", "Entenda o papel do HTML, CSS e JavaScript."],
+            ["Estrutura básica", "Iniciante", "Conheça DOCTYPE, html, head e body."],
+            ["Títulos e parágrafos", "Iniciante", "Use h1 a h6, p e br adequadamente."],
+            ["Links", "Iniciante", "Crie navegação com a e href."],
+            ["Imagens", "Iniciante", "Adicione imagens usando img, src e alt."],
+            ["Listas", "Iniciante", "Organize informações com ul, ol e li."],
+            ["Tabelas", "Iniciante", "Use table, tr, th e td."],
+            ["Divisões e organização", "Intermediário", "Agrupe elementos com div e span."],
+            ["Formulários", "Intermediário", "Use form, label, input, select e button."],
+            ["HTML semântico", "Intermediário", "Conheça header, nav, main, section e footer."],
+            ["Áudio e vídeo", "Intermediário", "Incorpore mídias com os elementos apropriados."],
+            ["Acessibilidade", "Avançado", "Crie páginas mais acessíveis e fáceis de navegar."],
+            ["Metadados e SEO", "Avançado", "Organize títulos, descrições e informações da página."],
+            ["Projeto final", "Projeto", "Construa uma página de apresentação completa."]
+        ]
+    },
+
+    CSS: {
+        emoji: "🎨",
+        cor: "#3976d2",
+        descricao: "Transforme páginas simples em interfaces modernas, bonitas e responsivas.",
+        aulas: [
+            ["Como funciona o CSS", "Iniciante", "Entenda seletores, propriedades e valores."],
+            ["Cores e fundos", "Iniciante", "Trabalhe com cores, background e gradientes."],
+            ["Fontes e textos", "Iniciante", "Use font-family, size, weight e alinhamento."],
+            ["Bordas e espaçamento", "Iniciante", "Aprenda border, margin e padding."],
+            ["Classes e identificadores", "Iniciante", "Organize estilos com class e id."],
+            ["Box model", "Intermediário", "Entenda content, padding, border e margin."],
+            ["Flexbox", "Intermediário", "Alinhe elementos com display: flex."],
+            ["CSS Grid", "Intermediário", "Crie layouts com linhas e colunas."],
+            ["Posicionamento", "Intermediário", "Use relative, absolute, fixed e sticky."],
+            ["Responsividade", "Intermediário", "Adapte o layout com media queries."],
+            ["Transições e animações", "Avançado", "Crie efeitos com transition e keyframes."],
+            ["Variáveis CSS", "Avançado", "Reutilize valores com custom properties."],
+            ["Pseudoclasses", "Avançado", "Explore hover, focus, nth-child e outras."],
+            ["Projeto final", "Projeto", "Crie uma interface gamer responsiva."]
+        ]
+    },
+
+    Java: {
+        emoji: "☕",
+        cor: "#df743f",
+        descricao: "Estude uma linguagem usada em aplicações empresariais, sistemas e Android.",
+        aulas: [
+            ["Preparando o ambiente", "Iniciante", "Conheça o JDK e como executar um programa."],
+            ["Primeiro programa", "Iniciante", "Entenda a classe e o método main."],
+            ["Variáveis e tipos", "Iniciante", "Conheça int, double, boolean, char e String."],
+            ["Operadores", "Iniciante", "Realize operações e comparações."],
+            ["Condições", "Iniciante", "Use if, else e switch."],
+            ["Repetições", "Iniciante", "Pratique for, while e do-while."],
+            ["Arrays", "Intermediário", "Armazene elementos do mesmo tipo."],
+            ["Métodos", "Intermediário", "Organize tarefas em métodos reutilizáveis."],
+            ["Classes e objetos", "Intermediário", "Aprenda os fundamentos de orientação a objetos."],
+            ["Construtores e encapsulamento", "Intermediário", "Organize e proteja os dados dos objetos."],
+            ["Herança e interfaces", "Avançado", "Estruture relações entre classes."],
+            ["Exceções", "Avançado", "Trate erros com try, catch e finally."],
+            ["Collections e generics", "Avançado", "Trabalhe com listas, conjuntos e mapas."],
+            ["Projeto final", "Projeto", "Crie um sistema de gerenciamento simples."]
+        ]
+    },
+
+    JavaScript: {
+        emoji: "🟨",
+        cor: "#c4a52b",
+        descricao: "Dê vida a páginas web com eventos, lógica, dados e comunicação com APIs.",
+        aulas: [
+            ["Introdução ao JavaScript", "Iniciante", "Entenda como adicionar comportamento às páginas."],
+            ["Variáveis", "Iniciante", "Use const, let e conheça var."],
+            ["Tipos e conversões", "Iniciante", "Trabalhe com strings, números, booleanos e conversões."],
+            ["Operadores", "Iniciante", "Aprenda operações, comparações e lógica."],
+            ["Condições", "Iniciante", "Use if, else e switch."],
+            ["Laços", "Iniciante", "Pratique for, while e for...of."],
+            ["Funções", "Intermediário", "Crie funções tradicionais e arrow functions."],
+            ["Arrays", "Intermediário", "Use map, filter, find, reduce e outros métodos."],
+            ["Objetos", "Intermediário", "Organize informações em propriedades e métodos."],
+            ["DOM", "Intermediário", "Selecione e modifique elementos HTML."],
+            ["Eventos", "Intermediário", "Responda a cliques, teclas e formulários."],
+            ["Armazenamento local", "Intermediário", "Conheça localStorage e sessionStorage."],
+            ["Promessas e async/await", "Avançado", "Trabalhe com operações assíncronas."],
+            ["Fetch e APIs", "Avançado", "Busque dados de serviços externos."],
+            ["Módulos e organização", "Avançado", "Divida o código em arquivos reutilizáveis."],
+            ["Projeto final", "Projeto", "Crie uma aplicação web interativa."]
+        ]
+    },
+
+    "C++": {
+        emoji: "⚙️",
+        cor: "#659ad2",
+        descricao: "Aprenda uma linguagem compilada, poderosa e usada em jogos, aplicações e sistemas de alto desempenho.",
+        aulas: [
+            ["Conhecendo C++", "Iniciante", "Entenda onde C++ é usada e como o compilador transforma seu código."],
+            ["Seu primeiro programa", "Iniciante", "Crie uma função main e mostre texto com cout."],
+            ["Variáveis e tipos", "Iniciante", "Use int, double, char, bool e string."],
+            ["Entrada, saída e operadores", "Iniciante", "Leia dados com cin e faça cálculos."],
+            ["Condições", "Iniciante", "Controle decisões com if, else e switch."],
+            ["Laços", "Iniciante", "Repita tarefas com for e while."],
+            ["Funções", "Intermediário", "Separe tarefas em funções com parâmetros e retorno."],
+            ["Arrays e vetores", "Intermediário", "Armazene coleções com arrays e std::vector."],
+            ["Strings", "Intermediário", "Crie e manipule texto com std::string."],
+            ["Referências e ponteiros", "Intermediário", "Entenda endereços, referências e acesso indireto."],
+            ["Structs e classes", "Intermediário", "Agrupe dados e comportamentos em tipos próprios."],
+            ["Construtores e encapsulamento", "Intermediário", "Inicialize objetos e proteja seus dados."],
+            ["Herança e polimorfismo", "Avançado", "Reutilize interfaces e comportamentos com segurança."],
+            ["STL e algoritmos", "Avançado", "Use containers e algoritmos da biblioteca padrão."],
+            ["Erros e arquivos", "Avançado", "Trate exceções e leia ou grave arquivos."],
+            ["Projeto final", "Projeto", "Construa um gerenciador de tarefas no terminal."]
+        ]
+    },
+
+    Lua: {
+        emoji: "🌙",
+        cor: "#737fe5",
+        descricao: "Aprenda uma linguagem leve, útil em jogos, scripts e sistemas embarcados.",
+        aulas: [
+            ["Primeiros passos", "Iniciante", "Conheça Lua e prepare seu ambiente."],
+            ["Variáveis e tipos", "Iniciante", "Trabalhe com números, strings, booleanos e nil."],
+            ["Entrada e saída", "Iniciante", "Conheça print e formas de receber dados."],
+            ["Operadores", "Iniciante", "Realize cálculos, comparações e operações lógicas."],
+            ["Condições", "Iniciante", "Use if, elseif e else."],
+            ["Laços", "Iniciante", "Pratique while, repeat...until e for."],
+            ["Tabelas", "Intermediário", "Armazene listas e dados organizados."],
+            ["Funções", "Intermediário", "Crie funções e retorne valores."],
+            ["Escopo e variáveis locais", "Intermediário", "Entenda local e o alcance das variáveis."],
+            ["Módulos", "Intermediário", "Organize o programa em partes."],
+            ["Metatables", "Avançado", "Explore comportamentos personalizados de tabelas."],
+            ["Coroutines", "Avançado", "Conheça execução cooperativa."],
+            ["Lua para jogos", "Avançado", "Estude lógica para personagens, eventos e pontuação."],
+            ["Projeto final", "Projeto", "Construa um pequeno jogo baseado em texto."]
+        ]
+    }
+};
+
+const wikiLinguagens = {
+    Python: {
+        resumo: "Linguagem de propósito geral conhecida por uma sintaxe legível. É usada em automação, análise de dados, ciência, web e prototipagem.",
+        inicio: "Instale Python 3 e use um editor ou terminal. Salve o código em um arquivo .py e execute com python arquivo.py. Em projetos, ambientes virtuais ajudam a isolar dependências.",
+        conceitos: "Indentação define blocos. Valores têm tipos como int, float, str e bool. Listas, tuplas, conjuntos e dicionários representam coleções. Funções são definidas com def; exceções podem ser tratadas com try e except.",
+        ecossistema: "A biblioteca padrão inclui módulos para arquivos, datas, expressões regulares e mais. Pacotes externos costumam ser instalados com pip. Django e Flask são exemplos de frameworks web; NumPy e pandas aparecem em dados.",
+        cuidado: "Python é interpretada pela implementação mais comum, CPython, mas isso não significa que seja sempre lenta. Escolha estruturas adequadas, meça antes de otimizar e não instale pacotes sem verificar sua origem.",
+        exemplo: "def saudar(nome):\n    return f\"Olá, {nome}!\"\n\nprint(saudar(\"Ana\"))",
+        caminho: ["Sintaxe e variáveis", "Condições e laços", "Coleções e funções", "Módulos, arquivos e erros", "Classes e projeto"]
+    },
+    Java: {
+        resumo: "Linguagem de propósito geral, estaticamente tipada e orientada a objetos. É comum em serviços, sistemas empresariais, ferramentas e aplicações Android.",
+        inicio: "Instale um JDK, que inclui ferramentas para compilar e executar. Um projeto simples pode começar em Main.java. Projetos maiores usam ferramentas como Maven ou Gradle.",
+        conceitos: "Tipos primitivos incluem int, double, boolean e char; String representa texto. Classes criam objetos, métodos definem operações e interfaces estabelecem contratos. O tratamento de exceções faz parte da linguagem.",
+        ecossistema: "A JVM executa bytecode Java. A biblioteca padrão oferece collections, entrada e saída, concorrência e rede. Spring é um framework popular para serviços; Java também pode ser usado no desenvolvimento Android.",
+        cuidado: "Declare tipos e escolha collections adequadas. Diferencie ==, que compara valores primitivos ou referências, de equals(), usado para igualdade lógica de objetos. Não capture Exception sem necessidade.",
+        exemplo: "public class Main {\n    public static void main(String[] args) {\n        String nome = \"Ana\";\n        System.out.println(\"Olá, \" + nome + \"!\");\n    }\n}",
+        caminho: ["JDK e primeiro programa", "Tipos, operadores e decisões", "Laços, arrays e métodos", "Classes, interfaces e exceções", "Collections e projeto"]
+    },
+    JavaScript: {
+        resumo: "Linguagem dinâmica que roda nos navegadores e também fora deles, por exemplo com Node.js. É central para experiências interativas na web.",
+        inicio: "Abra as ferramentas do navegador ou conecte um arquivo .js com a tag script. Para projetos com módulos e ferramentas, Node.js e um gerenciador de pacotes podem ser úteis.",
+        conceitos: "Use const e let para declarar variáveis. A linguagem tem funções, arrays e objetos; === compara sem conversão implícita. O DOM representa o documento e eventos permitem reagir a ações.",
+        ecossistema: "Navegadores fornecem DOM, Fetch e APIs web. Node.js permite JavaScript no servidor. npm distribui pacotes; frameworks como React são ferramentas opcionais, não requisitos para aprender a linguagem.",
+        cuidado: "Operações de rede são assíncronas: aprenda Promise e async/await. Trate erros, valide dados recebidos e não insira conteúdo não confiável com innerHTML.",
+        exemplo: "const nomes = [\"Ana\", \"Bia\"];\nconst saudacoes = nomes.map(nome => `Olá, ${nome}!`);\nconsole.log(saudacoes);",
+        caminho: ["Valores e variáveis", "Operadores, condições e laços", "Funções, arrays e objetos", "DOM, eventos e formulários", "Assincronismo, módulos e projeto"]
+    },
+    HTML: {
+        resumo: "HTML é uma linguagem de marcação, não uma linguagem de programação. Ela estrutura o conteúdo e comunica o significado dos elementos de uma página web.",
+        inicio: "Crie um arquivo .html com DOCTYPE, html, head e body. Abra-o no navegador. CSS cuida da apresentação e JavaScript pode adicionar comportamento.",
+        conceitos: "Elementos são escritos com tags e podem ter atributos. Use títulos hierárquicos, links, imagens com texto alternativo, formulários com rótulos e elementos semânticos como main, nav e footer.",
+        ecossistema: "O navegador interpreta HTML e constrói o DOM. Formulários podem enviar dados a um servidor. HTML semântico ajuda leitores de tela, manutenção e compreensão do documento.",
+        cuidado: "Nem todo elemento precisa de uma div. Associe label a cada campo, forneça alt apropriado às imagens e mantenha uma hierarquia de títulos coerente. HTML sozinho não valida dados de forma segura no servidor.",
+        exemplo: "<!doctype html>\n<html lang=\"pt-BR\">\n  <head>\n    <meta charset=\"utf-8\">\n    <title>Minha página</title>\n  </head>\n  <body>\n    <main><h1>Olá, mundo!</h1></main>\n  </body>\n</html>",
+        caminho: ["Documento e estrutura", "Textos, links e imagens", "Listas e tabelas", "Formulários e semântica", "Acessibilidade e página completa"]
+    },
+    CSS: {
+        resumo: "CSS é uma linguagem de folhas de estilo. Ela controla como documentos HTML ou XML são apresentados, incluindo layout, cores, tipografia e adaptação a telas.",
+        inicio: "Escreva regras em um arquivo .css e conecte-o com link rel=\"stylesheet\". Uma regra combina seletor e declarações; cada declaração contém uma propriedade e um valor.",
+        conceitos: "Aprenda cascata, especificidade e herança; box model; unidades; Flexbox para layouts em uma dimensão; Grid para linhas e colunas; pseudo-classes; media queries e custom properties.",
+        ecossistema: "O navegador aplica o CSS à árvore do documento. Ferramentas de desenvolvedor ajudam a inspecionar regras e dimensões. Frameworks são opcionais: fundamentos de CSS continuam essenciais.",
+        cuidado: "Evite depender de seletores excessivamente específicos. Preserve foco visível para teclado, contraste legível e layouts que funcionem em diferentes larguras. Teste preferências de movimento reduzido em animações.",
+        exemplo: ".cartao {\n  display: grid;\n  gap: 1rem;\n  padding: 1.25rem;\n  border: 1px solid #667;\n  border-radius: .75rem;\n}",
+        caminho: ["Seletores e declarações", "Cores, fontes e box model", "Flexbox e Grid", "Responsividade e estados", "Animações e componentes"]
+    },
+    "C++": {
+        resumo: "C++ é uma linguagem compilada, multiparadigma e de propósito geral. Permite controlar recursos com precisão e também oferece abstrações de alto nível.",
+        inicio: "Instale um compilador, como GCC, Clang ou MSVC. Salve um arquivo .cpp, inclua os cabeçalhos necessários e compile com suporte a um padrão moderno, como C++17 ou posterior.",
+        conceitos: "Tipos estáticos, funções, classes, templates, referências e ponteiros fazem parte da linguagem. A biblioteca padrão fornece strings, containers, algoritmos e smart pointers.",
+        ecossistema: "C++ é utilizada em jogos, aplicações de alto desempenho, ferramentas, sistemas e bibliotecas. CMake é comum para configurar builds. A biblioteca padrão é geralmente chamada de STL em conversas informais, embora o termo não cubra toda a biblioteca.",
+        cuidado: "Prefira RAII, std::vector, std::string e smart pointers a gerenciamento manual de memória quando apropriado. Ponteiros crus não devem ser usados para expressar propriedade sem motivo. Compile com avisos e teste os limites.",
+        exemplo: "#include <iostream>\n#include <string>\n\nint main() {\n    const std::string nome = \"Ana\";\n    std::cout << \"Olá, \" << nome << \"!\\n\";\n}",
+        caminho: ["Compilar e entender main", "Tipos, entrada e controle", "Funções e containers", "Referências e classes", "STL, arquivos e projeto"]
+    },
+    Lua: {
+        resumo: "Lua é uma linguagem leve, dinâmica e projetada para ser incorporada a aplicações. É usada em jogos, ferramentas e scripts de configuração.",
+        inicio: "Instale uma implementação de Lua e execute um arquivo .lua. Em alguns jogos, a própria engine fornece a versão e as APIs Lua disponíveis.",
+        conceitos: "Tabelas são a estrutura de dados central e podem representar listas e mapas. Use local para limitar escopo. Funções são valores; nil representa ausência. Metatables personalizam certos comportamentos.",
+        ecossistema: "Lua costuma integrar-se a um programa hospedeiro, que pode expor APIs próprias. LÖVE é uma framework para jogos 2D; outras engines embutem Lua de formas diferentes.",
+        cuidado: "Índices de sequências em Lua começam normalmente em 1. Não suponha que recursos de uma engine existam na Lua padrão. Declare variáveis com local para evitar globais acidentais.",
+        exemplo: "local jogador = {nome = \"Ana\", pontos = 0}\njogador.pontos = jogador.pontos + 10\nprint(jogador.nome, jogador.pontos)",
+        caminho: ["Sintaxe e valores", "Condições e laços", "Tabelas e funções", "Módulos e escopo", "Metatables e scripts de jogo"]
+    }
+};
+
+let estado = carregarEstado();
+let cursoAtual = "";
+let aulaAtual = null;
+let paginaAnterior = "curso";
+
+function carregarEstado() {
+    try {
+        const salvo = JSON.parse(localStorage.getItem("codeverse_estado")) || {
+            concluidas: [],
+            favoritos: []
+        };
+        const idsValidos = new Set(
+            Object.entries(cursos).flatMap(([nome, curso]) =>
+                curso.aulas.map((aula, indice) => idAula(nome, indice))
+            )
+        );
+        return {
+            concluidas: Array.isArray(salvo.concluidas)
+                ? [...new Set(salvo.concluidas.filter(id => idsValidos.has(id)))]
+                : [],
+            favoritos: Array.isArray(salvo.favoritos)
+                ? [...new Set(salvo.favoritos.filter(id => idsValidos.has(id)))]
+                : []
+        };
+    } catch {
+        return { concluidas: [], favoritos: [] };
+    }
+}
+
+function salvarEstado() {
+    localStorage.setItem("codeverse_estado", JSON.stringify(estado));
+    atualizarPainel();
+}
+
+function idAula(curso, indice) {
+    return curso + "::" + indice;
+}
+
+function contarConcluidas(curso) {
+    return cursos[curso].aulas.filter((aula, i) =>
+        estado.concluidas.includes(idAula(curso, i))
+    ).length;
+}
+
+function progressoCurso(curso) {
+    return Math.round(contarConcluidas(curso) / cursos[curso].aulas.length * 100);
+}
+
+function atualizarPainel() {
+    const totalAulas = Object.values(cursos)
+        .reduce((soma, curso) => soma + curso.aulas.length, 0);
+
+    const total = Object.keys(cursos)
+        .reduce((soma, nome) => soma + contarConcluidas(nome), 0);
+    const porcentagem = Math.round(total / totalAulas * 100);
+
+    document.getElementById("totalConcluidas").textContent = total;
+    document.getElementById("totalCursos").textContent = Object.keys(cursos).length;
+    document.getElementById("barraGeral").style.width = porcentagem + "%";
+    document.getElementById("percentualGeral").textContent =
+        porcentagem + "% do catálogo de aulas concluído";
+
+    const painel = document.getElementById("painelProgresso");
+
+    painel.innerHTML = Object.keys(cursos).map(nome => `
+        <article class="card">
+            <h3>${cursos[nome].emoji} ${nome}</h3>
+            <div class="barra"><div style="width:${progressoCurso(nome)}%"></div></div>
+            <p>${contarConcluidas(nome)} de ${cursos[nome].aulas.length} aulas</p>
+            <strong>${progressoCurso(nome)}%</strong>
+        </article>
+    `).join("");
+
+    renderizarFavoritos();
+}
+
+function abrirPagina(nome) {
+    document.querySelectorAll(".secao").forEach(secao => {
+        secao.classList.remove("ativa");
+    });
+
+    const destino = document.getElementById(nome);
+    if (!destino) return;
+
+    destino.classList.add("ativa");
+
+    document.querySelectorAll(".menu-item").forEach(botao => {
+        botao.classList.toggle(
+            "ativo",
+            botao.dataset.pagina === nome
+                || (nome === "curso" && botao.dataset.curso === cursoAtual)
+        );
+    });
+
+    document.getElementById("sidebar").classList.remove("aberta");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function abrirCurso(nome) {
+    if (!cursos[nome]) return;
+
+    cursoAtual = nome;
+    abrirPagina("curso");
+
+    const curso = cursos[nome];
+
+    document.getElementById("conteudoCurso").innerHTML = `
+        <div class="hero" style="background:linear-gradient(125deg, ${curso.cor}55, #151c35)">
+            <span class="tag">TRILHA DE APRENDIZADO</span>
+            <h1>${curso.emoji} ${nome}</h1>
+            <p>${curso.descricao}</p>
+            <button class="botao-secundario" onclick="abrirWiki('${nome}')">Consultar wiki de ${nome}</button>
+            <div class="barra"><div style="width:${progressoCurso(nome)}%"></div></div>
+            <p>${progressoCurso(nome)}% concluído</p>
+        </div>
+
+        <h2>Etapas do curso</h2>
+        <p class="texto-secundario">
+            Comece pela primeira aula e avance no seu ritmo.
+        </p>
+
+        <div class="lista-aulas">
+            ${curso.aulas.map((aula, i) => {
+                const id = idAula(nome, i);
+                const feita = estado.concluidas.includes(id);
+
+                return `
+                    <div class="aula">
+                        <div>
+                            <strong>${feita ? "✅" : "📘"} ${i + 1}. ${aula[0]}</strong>
+                            <div class="texto-secundario">${aula[1]}</div>
+                        </div>
+                        <button class="botao-secundario"
+                            onclick="abrirAula('${nome}', ${i})">
+                            ${feita ? "Revisar" : "Estudar"}
+                        </button>
+                    </div>
+                `;
+            }).join("")}
+        </div>
+    `;
+}
+
+function abrirAula(nome, indice) {
+    cursoAtual = nome;
+    aulaAtual = indice;
+    paginaAnterior = "curso";
+
+    const curso = cursos[nome];
+    const aula = curso.aulas[indice];
+    const id = idAula(nome, indice);
+    const feita = estado.concluidas.includes(id);
+    const favorita = estado.favoritos.includes(id);
+
+    abrirPagina("aula");
+
+    let exemplo = obterExemplo(nome, indice);
+
+    document.getElementById("conteudoAula").innerHTML = `
+        <span class="tag">${nome} • ${aula[1]}</span>
+        <h1>${aula[0]}</h1>
+        <p class="texto-secundario">${aula[2]}</p>
+
+        <hr class="linha">
+
+        <h2>📖 Entendendo o assunto</h2>
+        <p>
+            Nesta etapa, você vai estudar <strong>${aula[0]}</strong> em ${nome}.
+            Leia a explicação, observe o exemplo e tente modificar o código
+            para entender como ele funciona.
+        </p>
+
+        ${obterExplicacao(nome, indice)}
+
+        <h2>💻 Exemplo comentado</h2>
+        <div class="codigo">
+            <button class="botao-secundario" onclick="copiarExemplo()">📋 Copiar código</button>
+            <pre id="exemploCodigo">${escaparHTML(exemplo)}</pre>
+        </div>
+
+        <h2>🧪 Experimente</h2>
+        <div class="explicacao">
+            1. Leia o exemplo com atenção.<br>
+            2. Copie-o para o editor apropriado.<br>
+            3. Altere algum valor ou comando.<br>
+            4. Execute o código e compare os resultados.
+        </div>
+
+        <h2>🎯 Desafio da aula</h2>
+        <div class="card">
+            <p>${obterDesafio(nome, indice)}</p>
+            <p class="texto-secundario">
+                Tente resolver sem olhar a resposta. A melhor maneira de aprender
+                é escrever o próprio código.
+            </p>
+        </div>
+
+        <div class="grade">
+            <button class="botao-secundario" onclick="alternarFavorito('${nome}', ${indice})">
+                ${favorita ? "⭐ Remover dos favoritos" : "☆ Adicionar aos favoritos"}
+            </button>
+
+            <button class="botao" onclick="alternarConcluida('${nome}', ${indice})">
+                ${feita ? "↩ Marcar como não concluída" : "✅ Marcar como concluída"}
+            </button>
+        </div>
+
+        <div class="grade">
+            ${indice > 0 ? `<button class="botao-secundario" onclick="abrirAula('${nome}', ${indice - 1})">← Aula anterior</button>` : ""}
+            ${indice < curso.aulas.length - 1 ? `<button class="botao" onclick="abrirAula('${nome}', ${indice + 1})">Próxima aula →</button>` : ""}
+        </div>
+    `;
+}
+
+function obterExplicacao(nome, indice) {
+    const explicacoes = {
+        Python: [
+            "Python é uma linguagem de programação. Para começar, instale o Python e utilize um editor, como o VS Code. Salve seu programa com a extensão .py e execute-o com o interpretador.",
+            "Uma variável associa um nome a um valor. Em Python, você pode usar nome = 'Ana', idade = 18 e altura = 1.75. Tipos comuns incluem int, float, str e bool. Use type(valor) para verificar o tipo.",
+            "A função input() recebe dados digitados. Ela devolve texto, então use int(input()) para receber um inteiro ou float(input()) para um número decimal.",
+            "Os operadores incluem +, -, *, /, //, %, **, ==, !=, <, >, and, or e not. Parênteses ajudam a deixar a ordem das operações clara.",
+            "Use if para verificar uma condição, elif para testar alternativas e else para o caso restante. Python utiliza indentação para definir os blocos.",
+            "O while repete seu bloco enquanto a condição for verdadeira. Atualize as variáveis usadas na condição para evitar repetições infinitas.",
+            "O for percorre elementos de uma sequência. range(5), por exemplo, gera os números de 0 até 4.",
+            "Listas armazenam vários elementos: numeros = [10, 20, 30]. Use append() para adicionar elementos e len() para consultar o tamanho.",
+            "Tuplas são sequências que normalmente não são alteradas depois de criadas. Conjuntos armazenam elementos únicos.",
+            "Dicionários guardam dados em pares de chave e valor. Exemplo: pessoa = {'nome': 'Ana', 'idade': 18}.",
+            "Funções agrupam instruções. def cria uma função, parâmetros recebem informações e return devolve um resultado.",
+            "Módulos permitem reutilizar código. Por exemplo, import math disponibiliza funções matemáticas da biblioteca padrão.",
+            "try e except permitem tratar erros que podem acontecer durante a execução. Trate erros específicos sempre que possível.",
+            "Use open() para trabalhar com arquivos. O modo 'r' lê, 'w' escreve substituindo o conteúdo e 'a' acrescenta conteúdo.",
+            "Uma classe define uma estrutura para criar objetos. Objetos podem ter atributos e métodos.",
+            "Herança permite criar classes especializadas a partir de outras. Polimorfismo permite que operações semelhantes tenham comportamentos diferentes.",
+            "Geradores podem produzir valores sob demanda com yield. Decoradores permitem envolver ou modificar o comportamento de funções.",
+            "Projetos combinam os conceitos estudados. Planeje as entradas, o processamento, as saídas e os testes."
+        ],
+
+        HTML: [
+            "HTML é uma linguagem de marcação, não uma linguagem de programação tradicional. Ela define a estrutura e o significado do conteúdo de uma página.",
+            "O DOCTYPE declara HTML moderno. O head contém metadados; o body contém o conteúdo visível.",
+            "h1 representa o título principal e h2 a h6 representam níveis de subtítulo. p representa um parágrafo.",
+            "O elemento a cria links. href define o destino. Use textos descritivos para facilitar a navegação.",
+            "O elemento img exibe uma imagem. src indica o arquivo e alt descreve a imagem para leitores de tela e quando ela não carrega.",
+            "ul cria uma lista não ordenada; ol cria uma lista ordenada; li representa cada item.",
+            "table cria uma tabela; tr cria uma linha; th identifica cabeçalhos e td representa células de dados.",
+            "div é um contêiner genérico de bloco. span é um contêiner genérico em linha. Use elementos semânticos quando forem mais adequados.",
+            "Formulários coletam dados. Associe label aos campos, use tipos apropriados e valide os dados também no servidor.",
+            "Elementos semânticos descrevem as partes da página e ajudam a organização, acessibilidade e manutenção.",
+            "Elementos de áudio e vídeo permitem incorporar mídia. Considere controles, formatos compatíveis e legendas.",
+            "Acessibilidade envolve textos alternativos, rótulos, navegação por teclado, contraste e uma estrutura coerente.",
+            "Metadados ajudam navegadores e mecanismos de busca a entender a página. Título e descrição devem ser relevantes.",
+            "Combine estrutura HTML, estilos CSS e JavaScript quando necessário para criar uma página completa."
+        ],
+
+        CSS: [
+            "CSS define a apresentação visual do HTML. Uma regra contém um seletor e declarações com propriedades e valores.",
+            "Você pode definir cores com nomes, hexadecimal, rgb() e hsl(). background-color muda a cor de fundo.",
+            "font-family escolhe a família tipográfica; font-size define o tamanho; font-weight controla o peso; text-align alinha o texto.",
+            "margin controla o espaço externo; padding controla o espaço interno; border define a borda.",
+            "Classes são selecionadas com ponto, como .card. Identificadores são selecionados com #, como #principal.",
+            "No box model, o conteúdo é envolvido por padding, border e margin. box-sizing: border-box facilita o controle das dimensões.",
+            "Flexbox organiza elementos em uma dimensão. Experimente justify-content, align-items, gap e flex-wrap.",
+            "Grid organiza elementos em linhas e colunas. grid-template-columns define as colunas.",
+            "position controla como um elemento é posicionado. Escolha o valor de acordo com o comportamento desejado.",
+            "Media queries aplicam regras conforme características da tela. Comece com layouts flexíveis e teste diferentes larguras.",
+            "transition suaviza mudanças de propriedades. @keyframes define etapas de uma animação.",
+            "Variáveis CSS são declaradas, por exemplo, com --cor-principal e utilizadas com var(--cor-principal).",
+            "Pseudoclasses selecionam estados ou posições, como :hover, :focus e :first-child.",
+            "Um bom projeto organiza cores, espaçamentos, componentes e regras responsivas para manter consistência."
+        ],
+
+        Java: [
+            "Java usa o JDK para compilar e executar programas. Um projeto básico costuma começar com uma classe e o método main.",
+            "A execução tradicional começa pelo método public static void main(String[] args). A classe pública normalmente fica em arquivo com o mesmo nome.",
+            "Tipos primitivos incluem int, double, boolean e char. String é um objeto usado para textos.",
+            "Java oferece operadores aritméticos, relacionais, lógicos e de atribuição.",
+            "if e else verificam condições; switch seleciona entre diferentes alternativas.",
+            "for, while e do-while repetem instruções de maneiras diferentes.",
+            "Arrays armazenam uma quantidade fixa de elementos de um tipo. Os índices começam em zero.",
+            "Métodos agrupam instruções e podem receber parâmetros e devolver valores.",
+            "Classes descrevem estruturas e objetos são instâncias criadas a partir delas.",
+            "Construtores inicializam objetos. Encapsulamento controla o acesso aos dados usando modificadores e métodos.",
+            "Herança permite especializar classes. Interfaces definem contratos que as classes podem implementar.",
+            "Exceções representam situações anormais. Use try e catch para tratar os casos esperados.",
+            "Collections oferecem estruturas como List, Set e Map. Generics ajudam a indicar os tipos armazenados.",
+            "Um projeto completo deve separar responsabilidades, validar entradas e tratar erros."
+        ],
+
+        JavaScript: [
+            "JavaScript permite criar comportamentos interativos em páginas web e também pode ser utilizado no servidor.",
+            "Use const para referências que não serão reatribuídas e let quando precisar reatribuir. Evite var em código novo quando não for necessário.",
+            "JavaScript possui tipos como string, number, boolean, undefined, bigint, symbol e object. null representa ausência intencional de valor.",
+            "Use operadores aritméticos, comparações, operadores lógicos e o operador de igualdade estrita ===.",
+            "if, else e switch permitem executar blocos diferentes de acordo com condições.",
+            "Laços como for e while repetem instruções. for...of percorre valores de iteráveis.",
+            "Funções podem receber parâmetros e retornar resultados. Arrow functions oferecem uma sintaxe alternativa.",
+            "Arrays oferecem métodos como map, filter, find e reduce para transformar e consultar coleções.",
+            "Objetos agrupam propriedades e métodos. A notação com ponto acessa propriedades, como pessoa.nome.",
+            "O DOM representa a página como objetos que JavaScript pode consultar e modificar.",
+            "Eventos permitem reagir a cliques, entradas e envios de formulários.",
+            "localStorage mantém dados no navegador entre sessões, mas não deve guardar informações sensíveis.",
+            "Promises representam resultados futuros. async e await ajudam a escrever código assíncrono de maneira mais legível.",
+            "fetch permite fazer requisições HTTP. Verifique a resposta e trate erros de rede.",
+            "Módulos permitem dividir o código usando export e import.",
+            "Projetos interativos combinam eventos, estado, manipulação do DOM e organização de código."
+        ],
+
+        "C++": [
+            "C++ é uma linguagem compilada de uso geral. Um compilador como g++ ou Clang transforma o código-fonte em um programa executável. C++ é usada em jogos, ferramentas, sistemas e aplicações que precisam de controle e desempenho.",
+            "Um programa de terminal começa normalmente em main(). Inclua cabeçalhos, como iostream, e use std::cout para escrever. Compile com um compilador compatível com C++ moderno.",
+            "Tipos comuns incluem int, double, char e bool. std::string, disponível no cabeçalho string, representa texto. C++ é estaticamente tipada: cada variável tem um tipo.",
+            "std::cin lê valores do terminal e std::cout os exibe. Operadores aritméticos incluem +, -, *, / e %. Use nomes descritivos e confira se a entrada foi recebida corretamente.",
+            "if e else executam caminhos diferentes. switch é útil quando uma expressão integral precisa ser comparada com vários casos.",
+            "for é útil quando você conhece a repetição; while continua enquanto a condição for verdadeira. Atualize a condição para evitar laços infinitos.",
+            "Funções agrupam comportamentos reutilizáveis. Declare o tipo de retorno, os parâmetros e use return quando a função precisar devolver um valor.",
+            "Arrays têm tamanho fixo. std::vector, de <vector>, cresce conforme necessário e oferece operações como push_back() e size().",
+            "std::string oferece operações de texto, como concatenação com + e consulta de tamanho com size(). A posição dos caracteres começa em zero.",
+            "Uma referência é outro nome para um objeto existente. Um ponteiro guarda um endereço e pode ser nulo; prefira referências e recursos modernos quando possível.",
+            "struct e class definem tipos próprios. Em C++, struct começa com membros públicos por padrão; class começa com membros privados.",
+            "Construtores definem como um objeto começa. Encapsulamento protege invariantes; inicialize membros com listas de inicialização.",
+            "Herança expressa uma relação entre tipos. Funções virtuais permitem despacho dinâmico; use override ao sobrescrever e prefira composição quando simplificar o design.",
+            "A biblioteca padrão inclui containers, iteradores e algoritmos. std::sort ordena intervalos; std::vector e std::map são estruturas comuns.",
+            "Exceções podem comunicar erros excepcionais com try e catch. O cabeçalho fstream fornece ifstream para leitura e ofstream para escrita de arquivos.",
+            "Um projeto deve separar responsabilidades, validar entradas, escolher tipos adequados e compilar com avisos habilitados."
+        ],
+
+        Lua: [
+            "Lua é uma linguagem leve, usada em scripts e jogos. Você pode executar arquivos .lua com um interpretador Lua instalado.",
+            "Lua oferece tipos como nil, boolean, number, string, function, table, userdata e thread.",
+            "print() mostra informações. A entrada pode ser recebida com io.read() em ambientes de terminal.",
+            "Operadores incluem +, -, *, /, //, %, ^, .., ==, ~=, <, >, and, or e not.",
+            "Use if, elseif e else para escolher qual bloco será executado.",
+            "Lua oferece while, repeat...until e for numérico ou genérico.",
+            "Tabelas são uma estrutura central de Lua e podem representar listas, mapas e objetos.",
+            "Funções podem receber parâmetros e retornar vários valores.",
+            "Variáveis locais declaradas com local limitam seu escopo e ajudam a evitar conflitos.",
+            "Módulos podem retornar tabelas ou funções e ser carregados com require.",
+            "Metatables permitem definir comportamentos especiais para tabelas, como operações personalizadas.",
+            "Coroutines permitem suspender e retomar a execução cooperativamente.",
+            "Em jogos, scripts podem controlar estados, pontuação, inimigos, eventos e ações do jogador, dependendo da engine.",
+            "Um jogo simples pode combinar entrada do jogador, regras, pontuação e condições de vitória."
+        ]
+    };
+
+    return `<div class="explicacao">${explicacoes[nome][indice] || "Estude o conceito, teste exemplos e pratique até conseguir utilizá-lo sem consultar o material."}</div>`;
+}
+
+function obterExemplo(nome, indice) {
+    const exemplos = {
+        Python: [
+`# Um programa Python
+print("Olá, mundo!")`,
+`# Variáveis
+nome = "Ana"
+idade = 18
+altura = 1.65
+estudando = True
+
+print(nome, idade)
+print(type(idade))`,
+`nome = input("Qual é seu nome? ")
+idade = int(input("Qual é sua idade? "))
+print("Olá,", nome)
+print("Ano que vem:", idade + 1)`,
+`a = 10
+b = 3
+print(a + b)
+print(a % b)
+print(a > b)
+print(a == b)`,
+`idade = 18
+
+if idade >= 18:
+    print("Maior de idade")
+else:
+    print("Menor de idade")`,
+`contador = 1
+
+while contador <= 5:
+    print(contador)
+    contador += 1`,
+`for numero in range(1, 6):
+    print(numero)`,
+`numeros = [10, 20, 30]
+numeros.append(40)
+print(numeros)
+print(len(numeros))`,
+`coordenadas = (10, 20)
+cores = {"azul", "verde", "azul"}
+print(coordenadas)
+print(cores)`,
+`pessoa = {
+    "nome": "Ana",
+    "idade": 18
+}
+print(pessoa["nome"])`,
+`def somar(a, b):
+    return a + b
+
+resultado = somar(5, 3)
+print(resultado)`,
+`import math
+print(math.sqrt(25))`,
+`try:
+    numero = int("abc")
+except ValueError:
+    print("Valor inválido")`,
+`with open("dados.txt", "w", encoding="utf-8") as arquivo:
+    arquivo.write("Meu primeiro arquivo")`,
+`class Pessoa:
+    def __init__(self, nome):
+        self.nome = nome
+
+pessoa = Pessoa("Ana")
+print(pessoa.nome)`,
+`class Animal:
+    def falar(self):
+        return "Som"
+
+class Cachorro(Animal):
+    def falar(self):
+        return "Au au"
+
+print(Cachorro().falar())`,
+`def contar_ate(limite):
+    numero = 1
+    while numero <= limite:
+        yield numero
+        numero += 1
+
+print(list(contar_ate(3)))`,
+`def calcular(a, b):
+    return a + b
+
+print(calcular(10, 5))`
+        ],
+
+        HTML: [
+`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha página</title>
+</head>
+<body>
+    <h1>Olá, mundo!</h1>
+</body>
+</html>`,
+`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Estrutura</title>
+</head>
+<body>
+    <h1>Minha página</h1>
+    <p>Meu primeiro parágrafo.</p>
+</body>
+</html>`,
+`<h1>Título principal</h1>
+<h2>Subtítulo</h2>
+<p>Este é um parágrafo.</p>`,
+`<a href="https://example.com">Visitar página</a>`,
+`<img src="imagem.jpg" alt="Descrição da imagem">`,
+`<ul>
+    <li>Python</li>
+    <li>HTML</li>
+</ul>
+
+<ol>
+    <li>Estudar</li>
+    <li>Praticar</li>
+</ol>`,
+`<table>
+    <tr>
+        <th>Nome</th>
+        <th>Idade</th>
+    </tr>
+    <tr>
+        <td>Ana</td>
+        <td>18</td>
+    </tr>
+</table>`,
+`<div class="card">
+    <h2>Título</h2>
+    <p>Conteúdo do cartão.</p>
+</div>`,
+`<form>
+    <label for="nome">Nome:</label>
+    <input id="nome" name="nome" required>
+    <button type="submit">Enviar</button>
+</form>`,
+`<header>Cabeçalho</header>
+<nav>Navegação</nav>
+<main>
+    <section>Conteúdo principal</section>
+</main>
+<footer>Rodapé</footer>`,
+`<video controls width="400">
+    <source src="video.mp4" type="video/mp4">
+    Seu navegador não suporta vídeo.
+</video>`,
+`<button aria-label="Fechar janela">X</button>
+<img src="grafico.png" alt="Gráfico de resultados">`,
+`<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Aprenda programação">
+    <title>Curso de programação</title>
+</head>`,
+`<header><h1>Meu portfólio</h1></header>
+<main>
+    <section>
+        <h2>Sobre mim</h2>
+        <p>Estou aprendendo a programar.</p>
+    </section>
+</main>
+<footer>Meu projeto</footer>`
+        ],
+
+        CSS: [
+`h1 {
+    color: royalblue;
+}`,
+`body {
+    background-color: #101827;
+    color: white;
+}`,
+`h1 {
+    font-family: Arial, sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+}`,
+`.card {
+    margin: 20px;
+    padding: 15px;
+    border: 1px solid white;
+}`,
+`.destaque {
+    color: cyan;
+}
+
+#principal {
+    font-size: 30px;
+}`,
+`* {
+    box-sizing: border-box;
+}
+
+.card {
+    width: 300px;
+    padding: 20px;
+    border: 2px solid white;
+}`,
+`.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}`,
+`.grade {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}`,
+`.card {
+    position: relative;
+}
+
+.botao {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}`,
+`@media (max-width: 600px) {
+    .grade {
+        grid-template-columns: 1fr;
+    }
+}`,
+`.botao {
+    transition: transform .2s;
+}
+
+.botao:hover {
+    transform: scale(1.05);
+}`,
+`:root {
+    --cor-principal: #6c8cff;
+}
+
+h1 {
+    color: var(--cor-principal);
+}`,
+`.botao:hover {
+    background: royalblue;
+}
+
+input:focus {
+    outline: 2px solid cyan;
+}`,
+`.card {
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px #0005;
+}`
+        ],
+
+        Java: [
+`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Olá, mundo!");
+    }
+}`,
+`public class Main {
+    public static void main(String[] args) {
+        int idade = 18;
+        double altura = 1.75;
+        String nome = "Ana";
+        boolean ativo = true;
+
+        System.out.println(nome);
+    }
+}`,
+`public class Main {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 3;
+        System.out.println(a + b);
+    }
+}`,
+`int a = 10;
+int b = 3;
+System.out.println(a % b);
+System.out.println(a > b);`,
+`int idade = 18;
+
+if (idade >= 18) {
+    System.out.println("Maior de idade");
+} else {
+    System.out.println("Menor de idade");
+}`,
+`for (int i = 1; i <= 5; i++) {
+    System.out.println(i);
+}`,
+`int[] numeros = {10, 20, 30};
+System.out.println(numeros[0]);`,
+`static int somar(int a, int b) {
+    return a + b;
+}`,
+`class Pessoa {
+    String nome;
+}
+
+Pessoa pessoa = new Pessoa();
+pessoa.nome = "Ana";`,
+`class Pessoa {
+    private String nome;
+
+    public Pessoa(String nome) {
+        this.nome = nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+}`,
+`interface Animal {
+    void falar();
+}`,
+`try {
+    int numero = Integer.parseInt("abc");
+} catch (NumberFormatException erro) {
+    System.out.println("Número inválido");
+}`,
+`import java.util.ArrayList;
+
+ArrayList<String> nomes = new ArrayList<>();
+nomes.add("Ana");
+System.out.println(nomes.get(0));`,
+`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Projeto iniciado");
+    }
+}`
+        ],
+
+        JavaScript: [
+`console.log("Olá, mundo!");`,
+`const nome = "Ana";
+let idade = 18;
+idade += 1;
+
+console.log(nome, idade);`,
+`const numero = "25";
+console.log(Number(numero) + 5);
+console.log(typeof numero);`,
+`const a = 10;
+const b = 3;
+
+console.log(a + b);
+console.log(a === b);`,
+`const idade = 18;
+
+if (idade >= 18) {
+    console.log("Maior de idade");
+} else {
+    console.log("Menor de idade");
+}`,
+`for (let i = 1; i <= 5; i++) {
+    console.log(i);
+}`,
+`function somar(a, b) {
+    return a + b;
+}
+
+console.log(somar(2, 3));`,
+`const numeros = [1, 2, 3, 4];
+const dobrados = numeros.map(n => n * 2);
+console.log(dobrados);`,
+`const pessoa = {
+    nome: "Ana",
+    idade: 18
+};
+
+console.log(pessoa.nome);`,
+`const titulo = document.querySelector("h1");
+if (titulo) {
+    titulo.textContent = "Novo título";
+}`,
+`document.querySelector("button")
+    ?.addEventListener("click", () => {
+        console.log("Botão clicado!");
+    });`,
+`localStorage.setItem("nome", "Ana");
+console.log(localStorage.getItem("nome"));`,
+`async function buscarDados() {
+    const resposta = await fetch("/dados.json");
+    return resposta.json();
+}`,
+`fetch("/api/dados")
+    .then(resposta => {
+        if (!resposta.ok) {
+            throw new Error("Falha na requisição");
+        }
+        return resposta.json();
+    })
+    .then(dados => console.log(dados))
+    .catch(erro => console.error(erro));`,
+`export function somar(a, b) {
+    return a + b;
+}`,
+`const botao = document.querySelector("button");
+botao?.addEventListener("click", () => {
+    alert("Projeto interativo!");
+});`
+        ],
+
+        "C++": [
+`// Compile com um compilador C++ moderno.
+#include <iostream>
+
+int main() {
+    std::cout << "Olá, C++!" << std::endl;
+    return 0;
+}`,
+`#include <iostream>
+#include <string>
+
+int main() {
+    std::string nome = "Ana";
+    int idade = 18;
+    std::cout << nome << " tem " << idade << " anos.\\n";
+}`,
+`#include <iostream>
+#include <string>
+
+int main() {
+    int quantidade = 4;
+    double preco = 2.5;
+    char inicial = 'A';
+    bool disponivel = true;
+    std::string produto = "caderno";
+    std::cout << produto << ": " << quantidade * preco << "\\n";
+}`,
+`#include <iostream>
+
+int main() {
+    int idade{};
+    std::cout << "Sua idade: ";
+    std::cin >> idade;
+    std::cout << "No ano que vem: " << idade + 1 << "\\n";
+}`,
+`#include <iostream>
+
+int main() {
+    int nota = 8;
+    if (nota >= 7) {
+        std::cout << "Aprovado\\n";
+    } else {
+        std::cout << "Estude mais\\n";
+    }
+}`,
+`#include <iostream>
+
+int main() {
+    for (int numero = 1; numero <= 5; ++numero) {
+        std::cout << numero << "\\n";
+    }
+}`,
+`#include <iostream>
+
+int somar(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    std::cout << somar(4, 6) << "\\n";
+}`,
+`#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> notas{8, 9, 7};
+    notas.push_back(10);
+    std::cout << notas.size() << " notas\\n";
+    std::cout << notas.at(0) << "\\n";
+}`,
+`#include <iostream>
+#include <string>
+
+int main() {
+    std::string nome = "Ada";
+    nome += " Lovelace";
+    std::cout << nome << " (" << nome.size() << " caracteres)\\n";
+}`,
+`#include <iostream>
+
+int main() {
+    int pontos = 42;
+    int& referencia = pontos;
+    int* endereco = &pontos;
+    referencia += 1;
+    std::cout << *endereco << "\\n";
+}`,
+`#include <iostream>
+#include <string>
+
+struct Jogador {
+    std::string nome;
+    int pontos;
+};
+
+int main() {
+    Jogador jogador{"Lia", 120};
+    std::cout << jogador.nome << ": " << jogador.pontos << "\\n";
+}`,
+`#include <iostream>
+
+class Conta {
+private:
+    double saldo;
+public:
+    explicit Conta(double inicial) : saldo(inicial) {}
+    double consultar() const { return saldo; }
+};
+
+int main() {
+    Conta conta{50.0};
+    std::cout << conta.consultar() << "\\n";
+}`,
+`#include <iostream>
+
+class Animal {
+public:
+    virtual void falar() const { std::cout << "Som\\n"; }
+    virtual ~Animal() = default;
+};
+
+class Gato : public Animal {
+public:
+    void falar() const override { std::cout << "Miau\\n"; }
+};
+
+int main() {
+    Gato gato;
+    gato.falar();
+}`,
+`#include <algorithm>
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> valores{4, 1, 3, 2};
+    std::sort(valores.begin(), valores.end());
+    for (int valor : valores) std::cout << valor << " ";
+}`,
+`#include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+
+int main() {
+    try {
+        std::ifstream arquivo("dados.txt");
+        if (!arquivo) throw std::runtime_error("Arquivo não encontrado");
+        std::string linha;
+        std::getline(arquivo, linha);
+        std::cout << linha << "\\n";
+    } catch (const std::exception& erro) {
+        std::cerr << erro.what() << "\\n";
+    }
+}`,
+`#include <iostream>
+#include <string>
+#include <vector>
+
+struct Tarefa {
+    std::string titulo;
+    bool concluida{};
+};
+
+int main() {
+    std::vector<Tarefa> tarefas{{"Estudar C++", false}};
+    tarefas.push_back({"Fazer um projeto", false});
+    for (const Tarefa& tarefa : tarefas) {
+        std::cout << (tarefa.concluida ? "[x] " : "[ ] ")
+                  << tarefa.titulo << "\\n";
+    }
+}`
+        ],
+
+        Lua: [
+`print("Olá, mundo!")`,
+`local nome = "Ana"
+local idade = 18
+local ativo = true
+
+print(nome, idade, ativo)`,
+`io.write("Qual é seu nome? ")
+local nome = io.read()
+print("Olá, " .. nome)`,
+`local a = 10
+local b = 3
+
+print(a + b)
+print(a % b)
+print(a > b)`,
+`local idade = 18
+
+if idade >= 18 then
+    print("Maior de idade")
+else
+    print("Menor de idade")
+end`,
+`for i = 1, 5 do
+    print(i)
+end`,
+`local numeros = {10, 20, 30}
+table.insert(numeros, 40)
+print(numeros[1])`,
+`local function somar(a, b)
+    return a + b
+end
+
+print(somar(2, 3))`,
+`local nome = "Ana"
+
+do
+    local idade = 18
+    print(nome, idade)
+end`,
+`local calculadora = {}
+
+function calculadora.somar(a, b)
+    return a + b
+end
+
+return calculadora`,
+`local objeto = {}
+local metatabela = {
+    __tostring = function()
+        return "Meu objeto"
+    end
+}
+
+setmetatable(objeto, metatabela)
+print(objeto)`,
+`local co = coroutine.create(function()
+    print("Primeira etapa")
+    coroutine.yield()
+    print("Segunda etapa")
+end)
+
+coroutine.resume(co)
+coroutine.resume(co)`,
+`local pontos = 0
+pontos = pontos + 10
+print("Pontuação:", pontos)`,
+`local pontos = 0
+local jogando = true
+
+while jogando do
+    pontos = pontos + 1
+    if pontos >= 5 then
+        jogando = false
+    end
+end
+
+print("Fim do jogo:", pontos)`
+        ]
+    };
+
+    return exemplos[nome]?.[indice] || "// Estude o conceito e crie seu próprio exemplo.";
+}
+
+function obterDesafio(nome, indice) {
+    const desafios = {
+        Python: [
+            "Execute um programa que mostre uma mensagem personalizada.",
+            "Crie variáveis com seu nome, idade e altura e mostre seus valores.",
+            "Peça nome e idade ao usuário e mostre os dados.",
+            "Crie duas variáveis numéricas e mostre a soma, a diferença e a multiplicação.",
+            "Peça uma idade e informe se a pessoa é maior ou menor de idade.",
+            "Mostre os números de 1 a 10 usando while.",
+            "Mostre os números pares de 2 a 20 usando for.",
+            "Crie uma lista de cinco números e acrescente mais um.",
+            "Crie uma tupla de coordenadas e um conjunto de cores.",
+            "Crie um dicionário com nome e idade.",
+            "Crie uma função que receba dois números e retorne a soma.",
+            "Importe math e utilize uma função matemática.",
+            "Trate uma conversão inválida de texto para inteiro.",
+            "Grave uma mensagem em um arquivo.",
+            "Crie uma classe Pessoa com um atributo nome.",
+            "Crie uma classe especializada que herde de outra.",
+            "Experimente criar um gerador com yield.",
+            "Crie uma calculadora que some, subtraia, multiplique e divida."
+        ],
+        HTML: [
+            "Crie uma página com um título e um parágrafo.",
+            "Monte uma página com título, subtítulo e parágrafo.",
+            "Crie uma página com um título principal e dois subtítulos.",
+            "Crie um link para um site de sua escolha.",
+            "Exiba uma imagem com um texto alternativo.",
+            "Crie uma lista de cinco linguagens.",
+            "Monte uma tabela com três jogos e suas pontuações.",
+            "Crie um cartão com título e descrição.",
+            "Crie um formulário com nome e botão de envio.",
+            "Organize a página usando header, main e footer.",
+            "Adicione um vídeo com controles.",
+            "Revise sua página para melhorar a acessibilidade.",
+            "Adicione um título e uma descrição à página.",
+            "Monte uma página de portfólio com três seções."
+        ],
+        CSS: [
+            "Mude a cor de um título.",
+            "Escolha uma cor de fundo e uma cor para o texto.",
+            "Centralize um título e altere sua fonte.",
+            "Crie um cartão com margem, padding e borda.",
+            "Estilize uma classe e um identificador separadamente.",
+            "Crie um cartão com largura e espaçamento definidos.",
+            "Alinhe três cartões usando Flexbox.",
+            "Monte uma grade de seis cartões usando Grid.",
+            "Posicione um botão no canto de um cartão.",
+            "Faça a grade virar uma coluna em telas estreitas.",
+            "Crie um botão com efeito suave ao passar o mouse.",
+            "Defina uma variável CSS para a cor principal.",
+            "Estilize os estados hover e focus de um botão.",
+            "Crie uma interface de jogo responsiva."
+        ],
+        Java: [
+            "Mostre uma mensagem no terminal.",
+            "Crie quatro variáveis de tipos diferentes.",
+            "Faça a soma de dois números.",
+            "Compare dois números e mostre o resultado.",
+            "Verifique se uma idade é maior ou menor de idade.",
+            "Mostre números de 1 a 10.",
+            "Crie um array com cinco números.",
+            "Crie um método que retorne a soma de dois inteiros.",
+            "Crie uma classe para representar um jogo.",
+            "Crie um construtor e um método de acesso.",
+            "Defina uma interface e implemente-a.",
+            "Trate uma entrada numérica inválida.",
+            "Crie uma lista de nomes usando ArrayList.",
+            "Desenvolva um pequeno cadastro de jogadores."
+        ],
+        JavaScript: [
+            "Mostre uma mensagem no console.",
+            "Crie variáveis para nome e idade.",
+            "Converta uma string numérica para number.",
+            "Compare dois números usando ===.",
+            "Verifique uma condição com if e else.",
+            "Mostre os números de 1 a 10.",
+            "Crie uma função para calcular uma soma.",
+            "Multiplique todos os números de um array por dois usando map.",
+            "Crie um objeto para representar um jogador.",
+            "Altere o texto de um título HTML.",
+            "Faça um botão responder a um clique.",
+            "Salve e recupere uma preferência com localStorage.",
+            "Faça uma função assíncrona e trate erros.",
+            "Consuma uma API pública e apresente seus dados."
+        ],
+        Lua: [
+            "Mostre uma mensagem no terminal.",
+            "Crie variáveis de tipos diferentes.",
+            "Receba um nome e mostre uma saudação.",
+            "Faça cálculos com dois números.",
+            "Verifique se uma pessoa é maior de idade.",
+            "Mostre os números de 1 a 10.",
+            "Crie uma tabela com cinco elementos.",
+            "Crie uma função que some dois números.",
+            "Compare uma variável local com outra de escopo diferente.",
+            "Crie um módulo com uma função de soma.",
+            "Experimente definir um comportamento com metatable.",
+            "Crie uma coroutine que pause e retome.",
+            "Faça um contador de pontuação para um jogo.",
+            "Construa um jogo de adivinhação baseado em texto."
+        ],
+        "C++": [
+            "Explique com suas palavras por que C++ precisa ser compilada.",
+            "Imprima uma mensagem usando std::cout e uma função main.",
+            "Crie variáveis para nome, idade e altura e mostre os valores.",
+            "Leia dois números com std::cin e mostre a soma.",
+            "Verifique se um número é positivo, negativo ou zero.",
+            "Use um laço para mostrar os números pares de 2 a 20.",
+            "Crie uma função que receba dois inteiros e devolva o maior.",
+            "Armazene cinco notas em um std::vector e calcule a média.",
+            "Leia um nome e conte quantos caracteres ele possui.",
+            "Crie uma função que altere um valor recebido por referência.",
+            "Modele um livro usando struct com título e ano.",
+            "Crie uma classe Conta com saldo privado e método para consultar.",
+            "Crie uma classe derivada que sobrescreva um método virtual.",
+            "Ordene um vetor usando std::sort e mostre o resultado.",
+            "Grave tarefas em um arquivo e trate falha ao abri-lo.",
+            "Construa um gerenciador de tarefas com adicionar, listar e concluir."
+        ]
+    };
+
+    return desafios[nome]?.[indice] || "Crie um exemplo próprio que utilize o conceito estudado.";
+}
+
+function escaparHTML(texto) {
+    return texto.replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+async function copiarExemplo() {
+    const texto = document.getElementById("exemploCodigo").textContent;
+
+    try {
+        await navigator.clipboard.writeText(texto);
+        alert("Código copiado!");
+    } catch {
+        const area = document.createElement("textarea");
+        area.value = texto;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+        alert("Código copiado!");
+    }
+}
+
+function alternarConcluida(nome, indice) {
+    const id = idAula(nome, indice);
+
+    if (estado.concluidas.includes(id)) {
+        estado.concluidas = estado.concluidas.filter(item => item !== id);
+    } else {
+        estado.concluidas.push(id);
+    }
+
+    salvarEstado();
+    abrirAula(nome, indice);
+}
+
+function alternarFavorito(nome, indice) {
+    const id = idAula(nome, indice);
+
+    if (estado.favoritos.includes(id)) {
+        estado.favoritos = estado.favoritos.filter(item => item !== id);
+    } else {
+        estado.favoritos.push(id);
+    }
+
+    salvarEstado();
+    abrirAula(nome, indice);
+}
+
+function renderizarFavoritos() {
+    const elemento = document.getElementById("listaFavoritos");
+
+    if (!estado.favoritos.length) {
+        elemento.innerHTML = '<div class="card vazio">Você ainda não salvou nenhuma aula.</div>';
+        return;
+    }
+
+    elemento.innerHTML = estado.favoritos.map(id => {
+        const [nome, indiceTexto] = id.split("::");
+        const indice = Number(indiceTexto);
+        const aula = cursos[nome]?.aulas[indice];
+
+        if (!aula) return "";
+
+        return `
+            <div class="aula">
+                <div>
+                    <strong>${cursos[nome].emoji} ${nome}: ${aula[0]}</strong>
+                    <p class="texto-secundario">${aula[2]}</p>
+                </div>
+                <button class="botao" onclick="abrirAula('${nome}', ${indice})">Abrir aula</button>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderizarCards() {
+    const nomes = Object.keys(cursos);
+
+    const html = nomes.map(nome => `
+        <article class="card curso-card" onclick="abrirCurso('${nome}')">
+            <div style="font-size:32px">${cursos[nome].emoji}</div>
+            <h3>${nome}</h3>
+            <p>${cursos[nome].descricao}</p>
+            <div class="barra"><div style="width:${progressoCurso(nome)}%"></div></div>
+            <span class="badge">${progressoCurso(nome)}% concluído</span>
+        </article>
+    `).join("");
+
+    document.getElementById("cardsInicio").innerHTML = html;
+    document.getElementById("cardsTrilhas").innerHTML = html;
+    document.getElementById("biblioteca").innerHTML = html;
+}
+
+function pesquisar(termo) {
+    const busca = termo.trim().toLowerCase();
+
+    if (!busca) {
+        renderizarCards();
+        return;
+    }
+
+    const resultados = [];
+
+    Object.keys(cursos).forEach(nome => {
+        cursos[nome].aulas.forEach((aula, i) => {
+            const texto = `${nome} ${aula.join(" ")}`.toLowerCase();
+
+            if (texto.includes(busca)) {
+                resultados.push({ nome, indice: i, aula });
+            }
+        });
+    });
+
+    const resultadosWiki = Object.entries(wikiLinguagens).filter(([nome, wiki]) =>
+        `${nome} ${wiki.resumo} ${wiki.inicio} ${wiki.conceitos} ${wiki.ecossistema} ${wiki.cuidado} ${wiki.caminho.join(" ")}`
+            .toLocaleLowerCase("pt-BR").includes(busca)
+    );
+
+    abrirPagina("explorar");
+
+    const biblioteca = document.getElementById("biblioteca");
+
+    if (!resultados.length && !resultadosWiki.length) {
+        biblioteca.innerHTML = '<div class="card vazio">Nenhum resultado encontrado.</div>';
+        return;
+    }
+
+    biblioteca.innerHTML = resultados.map(item => `
+        <article class="card">
+            <span class="tag">${item.nome} • ${item.aula[1]}</span>
+            <h3>${item.aula[0]}</h3>
+            <p>${item.aula[2]}</p>
+            <button class="botao" onclick="abrirAula('${item.nome}', ${item.indice})">Abrir aula</button>
+        </article>
+    `).join("") + resultadosWiki.map(([nome, wiki]) => `
+        <article class="card">
+            <span class="tag">WIKI • ${cursos[nome].emoji} ${nome}</span>
+            <h3>Guia de referência: ${nome}</h3>
+            <p>${escaparHTML(wiki.resumo)}</p>
+            <button class="botao-secundario" onclick="abrirWiki('${nome}')">Abrir wiki</button>
+        </article>
+    `).join("");
+}
+
+const termosGlossario = [
+    ["Algoritmo", "Sequência organizada de instruções para resolver um problema."],
+    ["Array", "Estrutura que armazena vários valores em posições indexadas; os detalhes variam conforme a linguagem."],
+    ["Atributo", "Informação associada a um objeto ou elemento."],
+    ["Booleano", "Tipo lógico que representa verdadeiro ou falso."],
+    ["Bug", "Erro ou comportamento inesperado em um programa."],
+    ["Classe", "Estrutura que define características e comportamentos de objetos em linguagens orientadas a objetos."],
+    ["Compilador", "Programa que traduz código para outra representação executável ou intermediária."],
+    ["C++", "Linguagem compilada de propósito geral que combina abstrações de alto nível com controle detalhado."],
+    ["CSS", "Linguagem usada para definir a apresentação visual de documentos web."],
+    ["DOM", "Representação estruturada de um documento web que pode ser acessada por scripts."],
+    ["Função", "Bloco reutilizável de código que pode receber parâmetros e produzir um resultado."],
+    ["HTML", "Linguagem de marcação usada para estruturar conteúdo web."],
+    ["IDE", "Ambiente integrado que reúne ferramentas para desenvolver software."],
+    ["JavaScript", "Linguagem de programação muito utilizada para criar páginas web interativas."],
+    ["Laço", "Estrutura que repete instruções enquanto percorre uma sequência ou satisfaz uma condição."],
+    ["Lua", "Linguagem de programação leve, usada com frequência em scripts e jogos."],
+    ["Método", "Função associada a uma classe ou objeto, conforme a linguagem."],
+    ["Parâmetro", "Nome declarado para receber um valor quando uma função é chamada."],
+    ["Ponteiro", "Valor que representa o endereço de outro objeto; em C++, exige atenção ao tempo de vida e à propriedade."],
+    ["Python", "Linguagem de programação conhecida por sua sintaxe legível e ampla utilização."],
+    ["Referência", "Outro nome para um objeto existente; em C++, uma referência precisa ser inicializada."],
+    ["Recursão", "Técnica em que uma função chama a si mesma, com uma condição de parada."],
+    ["STL", "Nome informal para partes centrais da biblioteca padrão de C++, como containers, iteradores e algoritmos."],
+    ["Variável", "Nome usado para acessar um valor armazenado ou associado durante a execução."]
+];
+
+function renderizarGlossario(termo = "") {
+    const busca = termo.toLowerCase();
+
+    const filtrados = termosGlossario.filter(([nome, definicao]) =>
+        (nome + " " + definicao).toLowerCase().includes(busca)
+    );
+
+    document.getElementById("listaGlossario").innerHTML =
+        filtrados.map(([nome, definicao]) => `
+            <article class="card" style="margin:10px 0">
+                <h3>${nome}</h3>
+                <p>${definicao}</p>
+            </article>
+        `).join("") || '<div class="card vazio">Nenhum termo encontrado.</div>';
+}
+
+function abrirWiki(nome = "") {
+    const seletor = document.getElementById("seletorWiki");
+    if (nome && wikiLinguagens[nome]) {
+        seletor.value = nome;
+    }
+    document.getElementById("pesquisaWiki").value = "";
+    renderizarWiki();
+    abrirPagina("wiki");
+}
+
+function renderizarWiki() {
+    const nome = document.getElementById("seletorWiki").value;
+    const wiki = wikiLinguagens[nome];
+    const container = document.getElementById("conteudoWiki");
+    const termo = document.getElementById("pesquisaWiki").value.trim().toLocaleLowerCase("pt-BR");
+
+    if (!wiki) {
+        container.innerHTML = '<div class="card vazio">Escolha uma linguagem para consultar a wiki.</div>';
+        return;
+    }
+
+    const artigos = [
+        ["Visão geral", wiki.resumo],
+        ["Como começar", wiki.inicio],
+        ["Conceitos fundamentais", wiki.conceitos],
+        ["Ecossistema e usos", wiki.ecossistema],
+        ["Boas práticas e cuidados", wiki.cuidado]
+    ].filter(([titulo, texto]) =>
+        `${titulo} ${texto}`.toLocaleLowerCase("pt-BR").includes(termo)
+    );
+    const caminho = wiki.caminho.filter(etapa =>
+        etapa.toLocaleLowerCase("pt-BR").includes(termo)
+    );
+    const exemploCorresponde = `${nome} ${wiki.exemplo}`.toLocaleLowerCase("pt-BR").includes(termo);
+    const encontrou = artigos.length || caminho.length || exemploCorresponde;
+
+    if (!encontrou) {
+        container.innerHTML = '<div class="card vazio">Nenhum artigo encontrado nessa linguagem.</div>';
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="hero" style="background:linear-gradient(125deg, ${cursos[nome].cor}55, #151c35)">
+            <span class="tag">WIKI • REFERÊNCIA RÁPIDA</span>
+            <h2>${cursos[nome].emoji} ${nome}</h2>
+            <p>${escaparHTML(wiki.resumo)}</p>
+            <button class="botao-secundario" onclick="abrirCurso('${nome}')">
+                Abrir trilha completa de ${nome} →
+            </button>
+        </div>
+        <div class="grade">
+            ${artigos.map(([titulo, texto]) => `
+                <article class="card wiki-artigo">
+                    <h3>${escaparHTML(titulo)}</h3>
+                    <p>${escaparHTML(texto)}</p>
+                </article>
+            `).join("")}
+            ${caminho.length ? `
+                <article class="card wiki-artigo">
+                    <h3>Ordem sugerida de estudo</h3>
+                    <ol>${caminho.map(etapa => `<li>${escaparHTML(etapa)}</li>`).join("")}</ol>
+                </article>
+            ` : ""}
+            ${exemploCorresponde ? `
+                <article class="card wiki-artigo">
+                    <h3>Exemplo de referência</h3>
+                    <div class="codigo"><pre class="wiki-codigo">${escaparHTML(wiki.exemplo)}</pre></div>
+                    <p class="texto-secundario">Use o exemplo como ponto de partida e experimente alterá-lo.</p>
+                </article>
+            ` : ""}
+        </div>
+    `;
+}
+
+// Laboratório limitado para exemplos básicos de Python.
+// Não utiliza eval() nem executa código arbitrário.
+function executarExemploPython() {
+    const codigo = document.getElementById("codigoPython").value;
+    const saida = [];
+
+    const variaveis = {};
+
+    function avaliar(expressao) {
+        const expr = expressao.trim();
+
+        if (/^-?\d+(\.\d+)?$/.test(expr)) return Number(expr);
+
+        if (/^(['"]).*\1$/.test(expr)) return expr.slice(1, -1);
+
+        if (Object.prototype.hasOwnProperty.call(variaveis, expr)) {
+            return variaveis[expr];
+        }
+
+        const partes = expr.split(/\s*([+*\/-])\s*/);
+
+        if (partes.length === 3) {
+            const a = avaliar(partes[0]);
+            const op = partes[1];
+            const b = avaliar(partes[2]);
+
+            if (typeof a === "number" && typeof b === "number") {
+                if (op === "+") return a + b;
+                if (op === "-") return a - b;
+                if (op === "*") return a * b;
+                if (op === "/" && b !== 0) return a / b;
+            }
+
+            if (op === "+" && (typeof a === "string" || typeof b === "string")) {
+                return String(a) + String(b);
+            }
+        }
+
+        throw new Error("Expressão não suportada: " + expr);
+    }
+
+    try {
+        const linhas = codigo.split("\n");
+
+        for (let linha of linhas) {
+            linha = linha.trim();
+
+            if (!linha || linha.startsWith("#")) continue;
+
+            const impressao = linha.match(/^print\((.*)\)$/);
+
+            if (impressao) {
+                let expressao = impressao[1];
+                const argumentos = expressao.split(",").map(s => s.trim());
+                saida.push(argumentos.map(avaliar).join(" "));
+                continue;
+            }
+
+            const atribuicao = linha.match(/^([a-zA-Z_]\w*)\s*=\s*(.+)$/);
+
+            if (atribuicao) {
+                variaveis[atribuicao[1]] = avaliar(atribuicao[2]);
+                continue;
+            }
+
+            throw new Error("Comando não suportado: " + linha);
+        }
+
+        document.getElementById("saidaPython").textContent =
+            saida.length ? saida.join("\n") : "(Nenhuma saída)";
+    } catch (erro) {
+        document.getElementById("saidaPython").textContent =
+            "Não foi possível executar este exemplo.\n" + erro.message;
+    }
+}
+
+// Eventos do menu
+document.querySelectorAll("[data-pagina]").forEach(botao => {
+    botao.addEventListener("click", () => abrirPagina(botao.dataset.pagina));
+});
+
+document.querySelectorAll("[data-curso]").forEach(botao => {
+    botao.addEventListener("click", () => abrirCurso(botao.dataset.curso));
+});
+
+document.querySelectorAll("[data-ir]").forEach(botao => {
+    botao.addEventListener("click", () => abrirPagina(botao.dataset.ir));
+});
+
+document.getElementById("menuMobile").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("aberta");
+});
+
+document.getElementById("pesquisa").addEventListener("keydown", evento => {
+    if (evento.key === "Enter") {
+        pesquisar(evento.target.value);
+    }
+});
+
+document.getElementById("pesquisa").addEventListener("input", evento => {
+    if (!evento.target.value.trim()) {
+        renderizarCards();
+    }
+});
+
+document.getElementById("pesquisaGlossario").addEventListener("input", evento => {
+    renderizarGlossario(evento.target.value);
+});
+
+const seletorWiki = document.getElementById("seletorWiki");
+seletorWiki.innerHTML = Object.keys(wikiLinguagens).map(nome =>
+    `<option value="${nome}">${cursos[nome].emoji} ${nome}</option>`
+).join("");
+seletorWiki.value = "Python";
+seletorWiki.addEventListener("change", renderizarWiki);
+document.getElementById("pesquisaWiki").addEventListener("input", renderizarWiki);
+
+document.getElementById("verificar1").addEventListener("click", () => {
+    const resposta = document.getElementById("resposta1").value;
+    const resultado = document.getElementById("resultado1");
+
+    if (resposta.trim() === "") {
+        resultado.textContent = "Digite sua resposta primeiro.";
+        resultado.className = "aviso";
+    } else if (Number(resposta) === 2010) {
+        resultado.textContent = "Correto! 2026 - 16 = 2010.";
+        resultado.className = "sucesso";
+    } else {
+        resultado.textContent = "Ainda não. Subtraia a idade do ano.";
+        resultado.className = "aviso";
+    }
+});
+
+document.getElementById("verificar2").addEventListener("click", () => {
+    const resposta = document.getElementById("resposta2").value;
+    const resultado = document.getElementById("resultado2");
+
+    if (resposta === "h1") {
+        resultado.textContent = "Correto! <h1> representa o título principal.";
+        resultado.className = "sucesso";
+    } else {
+        resultado.textContent = "Tente novamente. Pense no elemento usado para o título principal.";
+        resultado.className = "aviso";
+    }
+});
+
+document.getElementById("voltarCurso").addEventListener("click", () => {
+    abrirCurso(cursoAtual);
+});
+
+document.getElementById("executarPython").addEventListener("click", executarExemploPython);
+
+document.getElementById("limparPython").addEventListener("click", () => {
+    document.getElementById("saidaPython").textContent = "";
+});
+
+document.getElementById("exportarProgresso").addEventListener("click", () => {
+    const arquivo = new Blob([JSON.stringify(estado, null, 2)], {
+        type: "application/json"
+    });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(arquivo);
+    link.download = "codeverse-progresso.json";
+    link.click();
+    URL.revokeObjectURL(link.href);
+});
+
+document.getElementById("reiniciarProgresso").addEventListener("click", () => {
+    if (confirm("Tem certeza de que deseja apagar suas aulas concluídas e favoritos?")) {
+        estado = { concluidas: [], favoritos: [] };
+        salvarEstado();
+        renderizarCards();
+
+        if (cursoAtual) abrirCurso(cursoAtual);
+    }
+});
+
+document.getElementById("tema").addEventListener("click", () => {
+    const claro = document.body.dataset.tema !== "claro";
+
+    document.body.dataset.tema = claro ? "claro" : "escuro";
+
+    if (claro) {
+        document.documentElement.style.setProperty("--fundo", "#f1f4fb");
+        document.documentElement.style.setProperty("--painel", "#ffffff");
+        document.documentElement.style.setProperty("--painel2", "#e2e9f8");
+        document.documentElement.style.setProperty("--texto", "#182238");
+        document.documentElement.style.setProperty("--texto2", "#596781");
+        document.documentElement.style.setProperty("--borda", "#d1d9e8");
+        document.getElementById("tema").textContent = "🌙 Tema";
+    } else {
+        document.documentElement.style.setProperty("--fundo", "#0b1020");
+        document.documentElement.style.setProperty("--painel", "#111a2e");
+        document.documentElement.style.setProperty("--painel2", "#17233b");
+        document.documentElement.style.setProperty("--texto", "#edf2ff");
+        document.documentElement.style.setProperty("--texto2", "#a8b4d0");
+        document.documentElement.style.setProperty("--borda", "#293754");
+        document.getElementById("tema").textContent = "☀️ Tema";
+    }
+});
+
+// Inicialização
+renderizarCards();
+renderizarGlossario();
+renderizarWiki();
+atualizarPainel();
+</script>
+</body>
+</html>
