@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -385,6 +386,46 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+.editor-toolbar {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) auto auto;
+    gap: 10px;
+    align-items: end;
+}
+
+.editor-toolbar .campo {
+    margin-bottom: 0;
+}
+
+.editor-area {
+    min-height: 340px;
+    resize: vertical;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    tab-size: 4;
+    white-space: pre;
+}
+
+.editor-status {
+    min-height: 1.5em;
+    color: var(--texto2);
+}
+
+.editor-preview {
+    width: 100%;
+    min-height: 280px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    background: white;
+}
+
+@media (max-width: 800px) {
+    .editor-toolbar {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
 
@@ -536,27 +577,54 @@ print(ano - idade)</pre></div>
     <section class="secao" id="laboratorio">
         <h1>💻 Laboratório de código</h1>
         <p class="texto-secundario">
-            Escreva um exemplo em Python e execute-o diretamente no navegador.
-            Este interpretador é uma simulação limitada: não executa todo o Python.
+            Escolha uma linguagem, escreva seu código e baixe o arquivo. Python,
+            HTML, CSS e JavaScript podem ser executados no navegador; as demais
+            linguagens ficam prontas para abrir no compilador ou editor apropriado.
         </p>
 
         <div class="card">
-            <label for="codigoPython">Seu código Python:</label>
-            <textarea class="campo" id="codigoPython" rows="9" spellcheck="false">nome = "Programador"
-print("Olá,", nome)
-print(2 + 3)</textarea>
-
-            <button class="botao" id="executarPython">▶ Executar exemplo</button>
-            <button class="botao-secundario" id="limparPython">Limpar saída</button>
-
-            <h3>Saída</h3>
-            <pre id="saidaPython" class="codigo" style="padding:18px;white-space:pre-wrap">O resultado aparecerá aqui.</pre>
-
-            <div class="explicacao">
-                <strong>Limitação:</strong> o laboratório aceita apenas um subconjunto
-                de comandos simples, como print(), variáveis e operações aritméticas.
-                Ele não é um interpretador Python completo.
+            <div class="editor-toolbar">
+                <label for="linguagemLaboratorio">
+                    Linguagem
+                    <select class="campo" id="linguagemLaboratorio">
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="c">C</option>
+                        <option value="csharp">C#</option>
+                        <option value="lua">Lua</option>
+                        <option value="go">Go</option>
+                        <option value="rust">Rust</option>
+                        <option value="php">PHP</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="kotlin">Kotlin</option>
+                        <option value="swift">Swift</option>
+                        <option value="sql">SQL</option>
+                        <option value="shell">Shell</option>
+                        <option value="outro">Outra linguagem (editar/baixar)</option>
+                    </select>
+                </label>
+                <button class="botao" id="executarCodigo">▶ Executar</button>
+                <button class="botao-secundario" id="baixarCodigo">⬇ Baixar arquivo</button>
             </div>
+            <label for="codigoEditor">Seu código:</label>
+            <textarea class="campo editor-area" id="codigoEditor" rows="14"
+                spellcheck="false" autocapitalize="off" autocomplete="off"
+                autocorrect="off" aria-describedby="ajudaEditor"></textarea>
+            <p class="texto-secundario" id="ajudaEditor">
+                Atalhos: Tab insere espaços; aspas e delimitadores fecham automaticamente;
+                Backspace apaga pares vazios. O código fica salvo neste navegador.
+            </p>
+            <p class="editor-status" id="statusEditor" role="status" aria-live="polite"></p>
+            <h3>Resultado / prévia</h3>
+            <pre id="saidaEditor" class="codigo" style="padding:18px;white-space:pre-wrap">Escolha uma linguagem e execute o código compatível.</pre>
+            <iframe id="previaEditor" class="editor-preview" title="Prévia isolada do código"
+                sandbox="allow-scripts" hidden></iframe>
+            <div class="explicacao" id="avisoExecucao"></div>
         </div>
     </section>
 
@@ -2247,81 +2315,390 @@ function renderizarWiki() {
     `;
 }
 
-// Laboratório limitado para exemplos básicos de Python.
-// Não utiliza eval() nem executa código arbitrário.
-function executarExemploPython() {
-    const codigo = document.getElementById("codigoPython").value;
-    const saida = [];
+const modelosLaboratorio = {
+    python: 'nome = "Programador"\nprint(f"Olá, {nome}!")\nprint(2 + 3)',
+    javascript: 'const nome = "Programador";\nconsole.log(`Olá, ${nome}!`);\nconsole.log(2 + 3);',
+    html: '<!doctype html>\n<html lang="pt-BR">\n<head>\n  <meta charset="utf-8">\n  <title>Minha página</title>\n</head>\n<body>\n  <h1>Olá, mundo!</h1>\n  <p>Edite este HTML e clique em Executar.</p>\n</body>\n</html>',
+    css: 'body {\n  font-family: Arial, sans-serif;\n  padding: 2rem;\n  background: #f1f4fb;\n}\n\nh1 {\n  color: #3559b7;\n}',
+    java: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Olá, mundo!");\n    }\n}',
+    cpp: '#include <iostream>\n\nint main() {\n    std::cout << "Olá, mundo!\\n";\n    return 0;\n}',
+    c: '#include <stdio.h>\n\nint main(void) {\n    printf("Olá, mundo!\\n");\n    return 0;\n}',
+    csharp: 'using System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine("Olá, mundo!");\n    }\n}',
+    lua: 'local nome = "mundo"\nprint("Olá, " .. nome .. "!")',
+    go: 'package main\n\nimport "fmt"\n\nfunc main() {\n    fmt.Println("Olá, mundo!")\n}',
+    rust: 'fn main() {\n    println!("Olá, mundo!");\n}',
+    php: '<?php\necho "Olá, mundo!\\n";',
+    ruby: 'nome = "mundo"\nputs "Olá, #{nome}!"',
+    typescript: 'const nome: string = "mundo";\nconsole.log(`Olá, ${nome}!`);',
+    kotlin: 'fun main() {\n    println("Olá, mundo!")\n}',
+    swift: 'import Foundation\n\nprint("Olá, mundo!")',
+    sql: 'CREATE TABLE exemplos (\n    id INTEGER PRIMARY KEY,\n    nome TEXT NOT NULL\n);\n\nSELECT * FROM exemplos;',
+    shell: '#!/bin/sh\nnome="mundo"\necho "Olá, $nome!"',
+    outro: '# Escreva seu código aqui.\n'
+};
 
-    const variaveis = {};
+const extensoesLaboratorio = {
+    python: "py", javascript: "js", html: "html", css: "css",
+    java: "java", cpp: "cpp", c: "c", csharp: "cs", lua: "lua",
+    go: "go", rust: "rs", php: "php", ruby: "rb", typescript: "ts",
+    kotlin: "kt", swift: "swift", sql: "sql", shell: "sh", outro: "txt"
+};
 
-    function avaliar(expressao) {
-        const expr = expressao.trim();
+const nomesLaboratorio = {
+    python: "Python", javascript: "JavaScript", html: "HTML", css: "CSS",
+    java: "Java", cpp: "C++", c: "C", csharp: "C#", lua: "Lua",
+    go: "Go", rust: "Rust", php: "PHP", ruby: "Ruby", typescript: "TypeScript",
+    kotlin: "Kotlin", swift: "Swift", sql: "SQL", shell: "Shell",
+    outro: "Outra linguagem"
+};
 
-        if (/^-?\d+(\.\d+)?$/.test(expr)) return Number(expr);
+const editorCodigo = document.getElementById("codigoEditor");
+const seletorLinguagem = document.getElementById("linguagemLaboratorio");
+const saidaEditor = document.getElementById("saidaEditor");
+const statusEditor = document.getElementById("statusEditor");
+const avisoExecucao = document.getElementById("avisoExecucao");
+const previaEditor = document.getElementById("previaEditor");
+let workerPython = null;
+let temporizadorWorker = null;
+let temporizadorJavaScript = null;
+let listenerJavaScript = null;
 
-        if (/^(['"]).*\1$/.test(expr)) return expr.slice(1, -1);
-
-        if (Object.prototype.hasOwnProperty.call(variaveis, expr)) {
-            return variaveis[expr];
-        }
-
-        const partes = expr.split(/\s*([+*\/-])\s*/);
-
-        if (partes.length === 3) {
-            const a = avaliar(partes[0]);
-            const op = partes[1];
-            const b = avaliar(partes[2]);
-
-            if (typeof a === "number" && typeof b === "number") {
-                if (op === "+") return a + b;
-                if (op === "-") return a - b;
-                if (op === "*") return a * b;
-                if (op === "/" && b !== 0) return a / b;
-            }
-
-            if (op === "+" && (typeof a === "string" || typeof b === "string")) {
-                return String(a) + String(b);
-            }
-        }
-
-        throw new Error("Expressão não suportada: " + expr);
+function cancelarExecucaoAnterior() {
+    window.clearTimeout(temporizadorWorker);
+    window.clearTimeout(temporizadorJavaScript);
+    if (workerPython) {
+        workerPython.terminate();
+        workerPython = null;
     }
+    if (listenerJavaScript) {
+        window.removeEventListener("message", listenerJavaScript);
+        listenerJavaScript = null;
+    }
+    previaEditor.hidden = true;
+    previaEditor.srcdoc = "";
+}
 
+function chaveCodigo(idioma) {
+    return `codeverse_codigo_${idioma}`;
+}
+
+function carregarCodigoEditor() {
+    cancelarExecucaoAnterior();
+    const idioma = seletorLinguagem.value;
     try {
-        const linhas = codigo.split("\n");
-
-        for (let linha of linhas) {
-            linha = linha.trim();
-
-            if (!linha || linha.startsWith("#")) continue;
-
-            const impressao = linha.match(/^print\((.*)\)$/);
-
-            if (impressao) {
-                let expressao = impressao[1];
-                const argumentos = expressao.split(",").map(s => s.trim());
-                saida.push(argumentos.map(avaliar).join(" "));
-                continue;
-            }
-
-            const atribuicao = linha.match(/^([a-zA-Z_]\w*)\s*=\s*(.+)$/);
-
-            if (atribuicao) {
-                variaveis[atribuicao[1]] = avaliar(atribuicao[2]);
-                continue;
-            }
-
-            throw new Error("Comando não suportado: " + linha);
-        }
-
-        document.getElementById("saidaPython").textContent =
-            saida.length ? saida.join("\n") : "(Nenhuma saída)";
+        editorCodigo.value = localStorage.getItem(chaveCodigo(idioma))
+            ?? modelosLaboratorio[idioma];
     } catch (erro) {
-        document.getElementById("saidaPython").textContent =
-            "Não foi possível executar este exemplo.\n" + erro.message;
+        editorCodigo.value = modelosLaboratorio[idioma];
+        statusEditor.textContent = `Não foi possível ler o rascunho salvo: ${erro.message}`;
+    }
+    atualizarAvisoExecucao();
+    saidaEditor.textContent = "Seu resultado ou prévia aparecerá aqui.";
+    previaEditor.hidden = true;
+    previaEditor.srcdoc = "";
+}
+
+function atualizarAvisoExecucao() {
+    const idioma = seletorLinguagem.value;
+    if (idioma === "python") {
+        avisoExecucao.textContent =
+            "Python roda em um Web Worker isolado usando Pyodide. Na primeira execução, o navegador baixa o runtime Python do CDN jsDelivr; o seu código é executado no navegador e não é enviado para um serviço de compilação. É necessária uma conexão com a internet para carregar o runtime. input() interativo e acesso ao computador não estão disponíveis.";
+    } else if (idioma === "javascript") {
+        avisoExecucao.textContent =
+            "JavaScript roda em uma prévia isolada. A prévia não pode acessar os arquivos da página nem fazer requisições de rede. Um loop infinito é encerrado automaticamente.";
+    } else if (idioma === "html" || idioma === "css") {
+        avisoExecucao.textContent =
+            "A prévia roda em um iframe isolado. HTML e CSS são exibidos sem executar scripts ou carregar recursos externos.";
+    } else {
+        avisoExecucao.textContent =
+            `${nomesLaboratorio[idioma]}: você pode escrever, editar e baixar seu arquivo. Para executar, abra-o no compilador, interpretador ou ambiente dessa linguagem instalado no computador. Este site não envia seu código a serviços externos.`;
     }
 }
+
+function salvarCodigoEditor() {
+    try {
+        localStorage.setItem(chaveCodigo(seletorLinguagem.value), editorCodigo.value);
+        statusEditor.textContent = "Rascunho salvo neste navegador.";
+    } catch (erro) {
+        statusEditor.textContent = `Não foi possível salvar o rascunho: ${erro.message}`;
+    }
+}
+
+function baixarCodigoEditor() {
+    const idioma = seletorLinguagem.value;
+    const extensao = extensoesLaboratorio[idioma];
+    const arquivo = new Blob([editorCodigo.value], { type: "text/plain;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(arquivo);
+    link.download = `meu-programa.${extensao}`;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    statusEditor.textContent = `Arquivo meu-programa.${extensao} baixado.`;
+}
+
+function mostrarSaida(texto) {
+    previaEditor.hidden = true;
+    previaEditor.srcdoc = "";
+    saidaEditor.hidden = false;
+    saidaEditor.textContent = texto;
+}
+
+function executarPreviaMarkup(idioma, codigo) {
+    saidaEditor.hidden = true;
+    previaEditor.hidden = false;
+    previaEditor.setAttribute("sandbox", "");
+    if (idioma === "html") {
+        previaEditor.srcdoc = `<!doctype html><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline' data:; form-action 'none'; base-uri 'none'">${codigo}`;
+        return;
+    }
+    previaEditor.srcdoc = `<!doctype html>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline' data:; form-action 'none'; base-uri 'none'">
+<style>${codigo}</style>
+<main><h1>Prévia do CSS</h1><p>Altere o CSS no editor e execute novamente.</p><button>Botão de exemplo</button><article class="card">Cartão de exemplo</article></main>`;
+}
+
+function executarJavaScriptIsolado(codigo) {
+    const token = `${Date.now()}-${Math.random()}`;
+    const frame = previaEditor;
+    frame.hidden = false;
+    saidaEditor.hidden = true;
+    frame.setAttribute("sandbox", "allow-scripts");
+    const bytes = new TextEncoder().encode(codigo);
+    const base64 = btoa(Array.from(bytes, byte => String.fromCharCode(byte)).join(""));
+    const tokenJson = JSON.stringify(token);
+    const script = `
+        const token = ${tokenJson};
+        const report = (type, values) => parent.postMessage({
+            source: "codeverse-lab", token, type,
+            text: values.map(value => {
+                try { return typeof value === "string" ? value : JSON.stringify(value); }
+                catch { return String(value); }
+            }).join(" ")
+        }, "*");
+        console.log = (...values) => report("log", values);
+        console.info = (...values) => report("log", values);
+        console.warn = (...values) => report("warn", values);
+        console.error = (...values) => report("error", values);
+        addEventListener("error", event => report("error", [event.message]));
+    `;
+    const listener = event => {
+        if (event.source !== frame.contentWindow || event.data?.source !== "codeverse-lab"
+            || event.data.token !== token) return;
+        const prefix = event.data.type === "error" ? "Erro: " : "";
+        const limite = 10000;
+        if (saidaEditor.textContent.length < limite) {
+            saidaEditor.textContent += `${prefix}${event.data.text}\n`.slice(
+                0,
+                limite - saidaEditor.textContent.length
+            );
+        }
+    };
+    listenerJavaScript = listener;
+    window.addEventListener("message", listener);
+    const cleanup = () => {
+        window.removeEventListener("message", listener);
+        if (listenerJavaScript === listener) {
+            listenerJavaScript = null;
+        }
+        frame.hidden = true;
+        frame.srcdoc = "";
+        statusEditor.textContent = "Prévia JavaScript encerrada.";
+    };
+    temporizadorJavaScript = window.setTimeout(cleanup, 5000);
+    frame.onload = () => {
+        frame.contentWindow.postMessage({ source: "codeverse-start", token }, "*");
+    };
+    frame.srcdoc = `<!doctype html>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' data:; style-src 'unsafe-inline'; connect-src 'none'; img-src data:">
+<pre id="saida"></pre>
+<script>${script}<\/script>
+<script>
+addEventListener("message", event => {
+    if (event.data?.source !== "codeverse-start" || event.data.token !== ${tokenJson}) return;
+    const source = "data:text/javascript;base64,${base64}";
+    const runner = document.createElement("script");
+    runner.src = source;
+    runner.onerror = () => parent.postMessage({
+        source: "codeverse-lab", token: ${tokenJson}, type: "error",
+        text: "O navegador bloqueou a execução deste código."
+    }, "*");
+    document.body.appendChild(runner);
+});
+<\/script>`;
+statusEditor.textContent = "Executando JavaScript na prévia isolada (limite de 5 segundos)...";
+}
+
+function executarPythonNoWorker(codigo) {
+    const workerSource = `
+        let runtime;
+        self.onmessage = async event => {
+            try {
+                if (!runtime) {
+                    importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js");
+                    runtime = await loadPyodide({
+                        indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/"
+                    });
+                    self.fetch = () => Promise.reject(new Error("Acesso à rede desativado no laboratório."));
+                }
+                await runtime.runPythonAsync(
+                    "import sys, io\\n_stdout = io.StringIO()\\n_stderr = io.StringIO()\\nsys.stdout = _stdout\\nsys.stderr = _stderr\\nsys.stdin = io.StringIO('')"
+                );
+                let error = "";
+                try {
+                    await runtime.runPythonAsync(event.data.code);
+                } catch (exception) {
+                    error = String(exception);
+                }
+                const output = await runtime.runPythonAsync(
+                    "_stdout.getvalue() + (_stderr.getvalue() and '\\\\n' + _stderr.getvalue() or '')"
+                );
+                self.postMessage({ output, error });
+            } catch (exception) {
+                self.postMessage({ output: "", error: String(exception) });
+            }
+        };
+    `;
+    const workerUrl = URL.createObjectURL(
+        new Blob([workerSource], { type: "text/javascript" })
+    );
+    workerPython = new Worker(workerUrl);
+    URL.revokeObjectURL(workerUrl);
+    workerPython.onmessage = event => {
+        window.clearTimeout(temporizadorWorker);
+        const { output, error } = event.data;
+        const result = [output, error ? `Erro:\n${error}` : ""].filter(Boolean).join("\n");
+        mostrarSaida(result || "(Programa executado sem saída.)");
+        statusEditor.textContent = error ? "Python terminou com um erro." : "Python executado no navegador.";
+    };
+    workerPython.onerror = event => {
+        window.clearTimeout(temporizadorWorker);
+        mostrarSaida(`Não foi possível iniciar o runtime Python: ${event.message}`);
+        statusEditor.textContent = "Falha na execução de Python.";
+        workerPython?.terminate();
+        workerPython = null;
+    };
+    mostrarSaida("Carregando o runtime Python no navegador...");
+    statusEditor.textContent = "Carregando Pyodide. A primeira execução pode demorar.";
+    temporizadorWorker = window.setTimeout(() => {
+        workerPython?.terminate();
+        workerPython = null;
+        mostrarSaida("Tempo limite excedido. O código foi interrompido.");
+        statusEditor.textContent = "Execução Python interrompida após 15 segundos.";
+    }, 15000);
+    workerPython.postMessage({ code: codigo });
+}
+
+function executarCodigoEditor() {
+    const idioma = seletorLinguagem.value;
+    const codigo = editorCodigo.value;
+    cancelarExecucaoAnterior();
+    if (idioma === "python") {
+        executarPythonNoWorker(codigo);
+    } else if (idioma === "javascript") {
+        mostrarSaida("");
+        executarJavaScriptIsolado(codigo);
+    } else if (idioma === "html" || idioma === "css") {
+        executarPreviaMarkup(idioma, codigo);
+        statusEditor.textContent = `Prévia de ${nomesLaboratorio[idioma]} atualizada.`;
+    } else {
+        mostrarSaida(
+            `${nomesLaboratorio[idioma]} não tem runtime de execução neste navegador.\n` +
+            `Baixe o arquivo .${extensoesLaboratorio[idioma]} e execute-o no compilador ou interpretador dessa linguagem.`
+        );
+        statusEditor.textContent = "Código mantido localmente; nenhum serviço externo foi usado.";
+    }
+}
+
+function inserirNoCursor(texto, inicio, fim = inicio) {
+    editorCodigo.setRangeText(texto, inicio, fim, "end");
+    editorCodigo.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+editorCodigo.addEventListener("keydown", evento => {
+    const pares = { "(": ")", "[": "]", "{": "}", '"': '"', "'": "'", "`": "`" };
+    const inicio = editorCodigo.selectionStart;
+    const fim = editorCodigo.selectionEnd;
+    const texto = editorCodigo.value;
+    const antes = texto[inicio - 1];
+    const depois = texto[inicio];
+
+    if (evento.key === "Tab") {
+        evento.preventDefault();
+        inserirNoCursor("    ", inicio, fim);
+        return;
+    }
+
+    if (evento.key === "Backspace" && inicio === fim && pares[antes] === depois) {
+        evento.preventDefault();
+        editorCodigo.setRangeText("", inicio - 1, inicio + 1, "end");
+        editorCodigo.dispatchEvent(new Event("input", { bubbles: true }));
+        return;
+    }
+
+    if (inicio === fim && [")", "]", "}", '"', "'", "`"].includes(evento.key) && depois === evento.key) {
+        evento.preventDefault();
+        editorCodigo.setSelectionRange(inicio + 1, inicio + 1);
+        return;
+    }
+
+    if (evento.key === "Enter") {
+        evento.preventDefault();
+        const linhaInicial = texto.lastIndexOf("\n", inicio - 1) + 1;
+        const indentacao = (texto.slice(linhaInicial, inicio).match(/^\s*/) || [""])[0];
+        const abreBloco = ["{", "[", "("].includes(antes) && [")", "]", "}"].includes(depois);
+        const recuoExtra = /[{:]\s*$/.test(texto.slice(linhaInicial, inicio));
+        if (abreBloco) {
+            const interno = `${indentacao}    `;
+            editorCodigo.setRangeText(`\n${interno}\n${indentacao}`, inicio, fim, "end");
+            editorCodigo.setSelectionRange(inicio + 1 + interno.length, inicio + 1 + interno.length);
+        } else {
+            const proximo = indentacao + (recuoExtra ? "    " : "");
+            inserirNoCursor(`\n${proximo}`, inicio, fim);
+        }
+        editorCodigo.dispatchEvent(new Event("input", { bubbles: true }));
+        return;
+    }
+
+    if (evento.key === "}" && inicio === fim && /^\s*$/.test(texto.slice(texto.lastIndexOf("\n", inicio - 1) + 1, inicio))) {
+        const linhaInicial = texto.lastIndexOf("\n", inicio - 1) + 1;
+        const linhaAntes = texto.slice(linhaInicial, inicio);
+        if (linhaAntes.endsWith("    ")) {
+            evento.preventDefault();
+            editorCodigo.setRangeText("}", inicio - 4, inicio, "end");
+            editorCodigo.dispatchEvent(new Event("input", { bubbles: true }));
+            return;
+        }
+    }
+
+    if (evento.key === ">" && seletorLinguagem.value === "html" && inicio === fim) {
+        const inicioLinha = texto.lastIndexOf("\n", inicio - 1) + 1;
+        const tag = texto.slice(inicioLinha, inicio).match(/<([a-zA-Z][\w-]*)(?:\s[^<>]*)?$/);
+        if (tag && !/^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i.test(tag[1])) {
+            evento.preventDefault();
+            const fechamento = `></${tag[1]}>`;
+            editorCodigo.setRangeText(fechamento, inicio, fim, "end");
+            editorCodigo.setSelectionRange(inicio + 1, inicio + 1);
+            editorCodigo.dispatchEvent(new Event("input", { bubbles: true }));
+            return;
+        }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(pares, evento.key)) {
+        evento.preventDefault();
+        const fechamento = pares[evento.key];
+        const selecionado = texto.slice(inicio, fim);
+        editorCodigo.setRangeText(
+            evento.key + selecionado + fechamento,
+            inicio,
+            fim,
+            "end"
+        );
+        const posicao = inicio + 1 + selecionado.length;
+        editorCodigo.setSelectionRange(posicao, posicao);
+        editorCodigo.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+});
 
 // Eventos do menu
 document.querySelectorAll("[data-pagina]").forEach(botao => {
@@ -2351,6 +2728,11 @@ document.getElementById("pesquisa").addEventListener("input", evento => {
         renderizarCards();
     }
 });
+
+document.getElementById("linguagemLaboratorio").addEventListener("change", carregarCodigoEditor);
+document.getElementById("codigoEditor").addEventListener("input", salvarCodigoEditor);
+document.getElementById("executarCodigo").addEventListener("click", executarCodigoEditor);
+document.getElementById("baixarCodigo").addEventListener("click", baixarCodigoEditor);
 
 document.getElementById("pesquisaGlossario").addEventListener("input", evento => {
     renderizarGlossario(evento.target.value);
@@ -2395,12 +2777,6 @@ document.getElementById("verificar2").addEventListener("click", () => {
 
 document.getElementById("voltarCurso").addEventListener("click", () => {
     abrirCurso(cursoAtual);
-});
-
-document.getElementById("executarPython").addEventListener("click", executarExemploPython);
-
-document.getElementById("limparPython").addEventListener("click", () => {
-    document.getElementById("saidaPython").textContent = "";
 });
 
 document.getElementById("exportarProgresso").addEventListener("click", () => {
@@ -2450,6 +2826,7 @@ document.getElementById("tema").addEventListener("click", () => {
 });
 
 // Inicialização
+carregarCodigoEditor();
 renderizarCards();
 renderizarGlossario();
 renderizarWiki();
@@ -2457,3 +2834,4 @@ atualizarPainel();
 </script>
 </body>
 </html>
+```
