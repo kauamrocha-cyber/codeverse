@@ -354,6 +354,20 @@ footer {
     overflow-wrap: anywhere;
 }
 
+.projeto-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.projeto-card .botao {
+    margin-top: auto;
+}
+
+.opcao-revisao {
+    min-height: 54px;
+    text-align: left;
+}
+
 @media (max-width: 800px) {
     .sidebar {
         transform: translateX(-100%);
@@ -452,6 +466,8 @@ footer {
 
     <div class="grupo-menu">PRÁTICA</div>
     <button class="menu-item" data-pagina="exercicios">🧠 Exercícios</button>
+    <button class="menu-item" data-pagina="revisao">🎯 Revisão rápida</button>
+    <button class="menu-item" data-pagina="projetos">🧩 Projetos guiados</button>
     <button class="menu-item" data-pagina="laboratorio">💻 Laboratório</button>
     <button class="menu-item" data-pagina="favoritos">⭐ Favoritos</button>
 
@@ -496,10 +512,25 @@ footer {
             </article>
 
             <article class="card">
-                <div class="texto-secundario">Sua próxima meta</div>
-                <div class="numero">🎯</div>
-                <p>Conclua uma aula e avance na sua trilha.</p>
-                <button class="botao-secundario" data-ir="trilhas">Ver trilhas</button>
+                <div class="texto-secundario">Perguntas respondidas</div>
+                <div class="numero" id="totalPerguntas">0</div>
+                <p><span id="acertosPerguntas">0</span> respostas corretas. Pratique um pouco por dia.</p>
+                <button class="botao-secundario" data-ir="revisao">Fazer revisão</button>
+            </article>
+        </div>
+
+        <div class="card" id="continuarEstudo"></div>
+        <h2>Continue explorando</h2>
+        <div class="grade">
+            <article class="card">
+                <h3>🎯 Revisão rápida</h3>
+                <p>Questões curtas para conferir o que você já aprendeu em cada linguagem.</p>
+                <button class="botao-secundario" data-ir="revisao">Começar revisão</button>
+            </article>
+            <article class="card">
+                <h3>🧩 Projetos guiados</h3>
+                <p>Transforme os conceitos das aulas em pequenos projetos práticos.</p>
+                <button class="botao-secundario" data-ir="projetos">Ver projetos</button>
             </article>
         </div>
 
@@ -573,6 +604,36 @@ print(ano - idade)</pre></div>
         </div>
     </section>
 
+    <section class="secao" id="revisao">
+        <h1>🎯 Revisão rápida</h1>
+        <p class="texto-secundario">
+            Responda questões curtas por linguagem. Seu resultado fica salvo neste navegador.
+        </p>
+        <div class="card">
+            <label for="idiomaRevisao">Escolha uma linguagem para revisar</label>
+            <select class="campo" id="idiomaRevisao"></select>
+            <div id="perguntaRevisao" aria-live="polite"></div>
+            <div id="opcoesRevisao" class="grade"></div>
+            <p id="resultadoRevisao" role="status" aria-live="polite"></p>
+            <button class="botao" id="proximaRevisao" hidden>Próxima pergunta →</button>
+        </div>
+    </section>
+
+    <section class="secao" id="projetos">
+        <h1>🧩 Projetos guiados</h1>
+        <p class="texto-secundario">
+            Escolha um projeto, leia os objetivos e carregue um ponto de partida no laboratório.
+            Complete as etapas e personalize o resultado.
+        </p>
+        <div class="wiki-filtros">
+            <label for="filtroProjetos" class="texto-secundario">Filtrar por linguagem</label>
+            <select class="campo" id="filtroProjetos">
+                <option value="">Todas as linguagens</option>
+            </select>
+        </div>
+        <div class="grade" id="listaProjetos"></div>
+    </section>
+
     <!-- LABORATÓRIO -->
     <section class="secao" id="laboratorio">
         <h1>💻 Laboratório de código</h1>
@@ -642,6 +703,7 @@ print(ano - idade)</pre></div>
             Acompanhe suas aulas concluídas em cada linguagem.
         </p>
         <div class="grade" id="painelProgresso"></div>
+        <div class="grade" id="estatisticasRevisao"></div>
         <button class="botao-secundario" id="exportarProgresso">Exportar progresso em JSON</button>
         <button class="botao-secundario" id="reiniciarProgresso">Reiniciar progresso</button>
         <p class="texto-secundario">O progresso fica salvo neste navegador.</p>
@@ -912,10 +974,53 @@ const wikiLinguagens = {
     }
 };
 
+const projetosGuiados = [
+    { curso: "Python", titulo: "Calculadora de terminal", nivel: "Iniciante", descricao: "Uma calculadora que lê dois valores, oferece operações e informa o resultado.", etapas: ["Receba os números e a operação escolhida.", "Use condições para selecionar a conta.", "Trate divisão por zero e entradas inválidas."], codigo: "print('Calculadora')\nnumero1 = float(input('Primeiro número: '))\nnumero2 = float(input('Segundo número: '))\noperacao = input('Operação (+, -, *, /): ')\n\n# TODO: implemente as operações e valide a entrada\n" },
+    { curso: "JavaScript", titulo: "Lista de tarefas", nivel: "Intermediário", descricao: "Crie uma lista interativa para adicionar tarefas e marcar itens concluídos.", etapas: ["Monte um campo de texto e um botão.", "Crie elementos de lista com JavaScript.", "Adicione uma ação para concluir ou remover itens."], codigo: "const tarefas = [];\n\nfunction adicionarTarefa(texto) {\n    // TODO: valide o texto e adicione a tarefa\n    tarefas.push({ texto, concluida: false });\n}\n\nadicionarTarefa('Estudar JavaScript');\nconsole.log(tarefas);\n" },
+    { curso: "HTML", titulo: "Página de portfólio", nivel: "Iniciante", descricao: "Estruture uma página pessoal acessível com apresentação, projetos e contato.", etapas: ["Use header, main e footer.", "Crie seções com títulos em ordem.", "Adicione links com textos descritivos."], codigo: "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Meu portfólio</title>\n</head>\n<body>\n  <header><h1>Meu nome</h1></header>\n  <main>\n    <!-- TODO: adicione apresentação, projetos e contato -->\n  </main>\n  <footer>Feito por mim</footer>\n</body>\n</html>\n" },
+    { curso: "CSS", titulo: "Cartão de perfil responsivo", nivel: "Iniciante", descricao: "Desenhe um cartão de perfil que se adapte a telas pequenas e grandes.", etapas: ["Defina cores e espaçamentos com variáveis.", "Organize o conteúdo com Flexbox.", "Inclua estados de foco e ajuste para celular."], codigo: ":root {\n    --cor-destaque: #6c8cff;\n}\n\n.cartao-perfil {\n    /* TODO: defina largura, espaçamento, borda e layout */\n}\n\n@media (max-width: 600px) {\n    /* TODO: adapte o cartão para telas pequenas */\n}\n" },
+    { curso: "Java", titulo: "Cadastro de estudantes", nivel: "Intermediário", descricao: "Modele estudantes e mantenha uma coleção de registros em memória.", etapas: ["Crie uma classe Estudante com atributos.", "Armazene objetos em uma lista.", "Implemente busca por nome e exibição dos resultados."], codigo: "import java.util.ArrayList;\nimport java.util.List;\n\nclass Estudante {\n    String nome;\n\n    Estudante(String nome) {\n        this.nome = nome;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Estudante> estudantes = new ArrayList<>();\n        // TODO: adicione, pesquise e liste estudantes\n    }\n}\n" },
+    { curso: "C++", titulo: "Gerenciador de tarefas", nivel: "Intermediário", descricao: "Modele tarefas e implemente ações básicas usando recursos modernos da biblioteca padrão.", etapas: ["Crie uma struct Tarefa.", "Armazene tarefas em std::vector.", "Implemente listagem e conclusão de tarefas."], codigo: "#include <iostream>\n#include <string>\n#include <vector>\n\nstruct Tarefa {\n    std::string descricao;\n    bool concluida = false;\n};\n\nint main() {\n    std::vector<Tarefa> tarefas;\n    // TODO: adicione e liste tarefas\n    return 0;\n}\n" },
+    { curso: "Lua", titulo: "Jogo de adivinhação", nivel: "Iniciante", descricao: "Use variáveis, condições e laços para criar um jogo de adivinhação no terminal.", etapas: ["Defina um número secreto e uma tentativa.", "Dê dicas de maior ou menor.", "Encerre quando acertar e conte as tentativas."], codigo: "local numeroSecreto = 7\nlocal tentativas = 0\nlocal acertou = false\n\nwhile not acertou do\n    -- TODO: leia uma tentativa e compare com o número secreto\n    tentativas = tentativas + 1\n    acertou = true -- substitua pela condição correta\nend\n\nprint('Tentativas:', tentativas)\n" }
+];
+
+const revisoes = {
+    Python: [
+        { pergunta: "Qual estrutura guarda pares de chave e valor em Python?", opcoes: ["Lista", "Dicionário", "Tupla", "Conjunto"], resposta: 1, explicacao: "Dicionários associam chaves a valores, por exemplo {'nome': 'Ana'}." },
+        { pergunta: "O que a função input() devolve por padrão?", opcoes: ["Um número inteiro", "Um valor booleano", "Um texto (str)", "Uma lista"], resposta: 2, explicacao: "input() devolve str. Converta explicitamente quando precisar de números." }
+    ],
+    Java: [
+        { pergunta: "Qual palavra-chave declara uma classe em Java?", opcoes: ["class", "struct", "define", "object"], resposta: 0, explicacao: "A declaração de uma classe começa com class, seguida pelo nome e pelo corpo entre chaves." },
+        { pergunta: "Qual método é usado para comparar igualdade lógica de Strings?", opcoes: ["==", "equals()", "same()", "compare"], resposta: 1, explicacao: "equals() compara o conteúdo de Strings; == compara valores primitivos ou identidade de referências." }
+    ],
+    JavaScript: [
+        { pergunta: "Qual declaração permite reatribuir uma variável local?", opcoes: ["const", "let", "static", "final"], resposta: 1, explicacao: "let permite reatribuição. const impede reatribuir a variável, embora um objeto constante ainda possa ter propriedades alteradas." },
+        { pergunta: "Qual operador compara valor e tipo sem conversão implícita?", opcoes: ["=", "==", "===", "!="], resposta: 2, explicacao: "=== é a comparação estrita mais previsível em JavaScript." }
+    ],
+    HTML: [
+        { pergunta: "HTML serve principalmente para...", opcoes: ["Estruturar o conteúdo", "Executar consultas SQL", "Compilar programas", "Criar estilos"], resposta: 0, explicacao: "HTML marca e organiza o conteúdo. CSS cuida da apresentação e JavaScript pode adicionar comportamento." },
+        { pergunta: "Qual atributo fornece texto alternativo para uma imagem?", opcoes: ["title", "src", "alt", "label"], resposta: 2, explicacao: "alt descreve a imagem para leitores de tela e quando ela não pode ser exibida." }
+    ],
+    CSS: [
+        { pergunta: "Qual propriedade altera a cor do texto?", opcoes: ["font-style", "color", "background", "text-size"], resposta: 1, explicacao: "A propriedade color define a cor do conteúdo textual." },
+        { pergunta: "Qual regra aplica estilos até uma largura máxima de tela?", opcoes: ["@supports", "@media (max-width: ...)", "@font-face", "@keyframes"], resposta: 1, explicacao: "@media permite aplicar estilos conforme características da tela, como sua largura." }
+    ],
+    "C++": [
+        { pergunta: "Qual cabeçalho declara std::vector?", opcoes: ["<array>", "<vector>", "<list>", "<iostream>"], resposta: 1, explicacao: "Inclua <vector> para usar o container std::vector." },
+        { pergunta: "Qual é a função de entrada convencional de um programa C++?", opcoes: ["start()", "main()", "run()", "init()"], resposta: 1, explicacao: "A execução convencional de um programa C++ começa em main()." }
+    ],
+    Lua: [
+        { pergunta: "Qual palavra-chave declara uma variável local em Lua?", opcoes: ["var", "let", "local", "def"], resposta: 2, explicacao: "Use local para declarar uma variável com escopo local." },
+        { pergunta: "Qual estrutura central de Lua também pode representar listas e mapas?", opcoes: ["Tabela", "Tupla", "Classe", "Pilha"], resposta: 0, explicacao: "Tabelas são a estrutura de dados fundamental de Lua." }
+    ]
+};
+
 let estado = carregarEstado();
 let cursoAtual = "";
 let aulaAtual = null;
 let paginaAnterior = "curso";
+let perguntaAtualRevisao = null;
+let indiceQuestaoAnterior = -1;
 
 function carregarEstado() {
     try {
@@ -934,10 +1039,16 @@ function carregarEstado() {
                 : [],
             favoritos: Array.isArray(salvo.favoritos)
                 ? [...new Set(salvo.favoritos.filter(id => idsValidos.has(id)))]
-                : []
+                : [],
+            revisao: {
+                respondidas: Number.isInteger(salvo.revisao?.respondidas) && salvo.revisao.respondidas > 0
+                    ? salvo.revisao.respondidas : 0,
+                acertos: Number.isInteger(salvo.revisao?.acertos) && salvo.revisao.acertos > 0
+                    ? salvo.revisao.acertos : 0
+            }
         };
     } catch {
-        return { concluidas: [], favoritos: [] };
+        return { concluidas: [], favoritos: [], revisao: { respondidas: 0, acertos: 0 } };
     }
 }
 
@@ -973,6 +1084,8 @@ function atualizarPainel() {
     document.getElementById("barraGeral").style.width = porcentagem + "%";
     document.getElementById("percentualGeral").textContent =
         porcentagem + "% do catálogo de aulas concluído";
+    document.getElementById("totalPerguntas").textContent = estado.revisao.respondidas;
+    document.getElementById("acertosPerguntas").textContent = estado.revisao.acertos;
 
     const painel = document.getElementById("painelProgresso");
 
@@ -984,6 +1097,32 @@ function atualizarPainel() {
             <strong>${progressoCurso(nome)}%</strong>
         </article>
     `).join("");
+
+    const porcentagemAcerto = estado.revisao.respondidas
+        ? Math.round(estado.revisao.acertos / estado.revisao.respondidas * 100)
+        : 0;
+    document.getElementById("estatisticasRevisao").innerHTML = `
+        <article class="card">
+            <h3>🎯 Revisão de conhecimentos</h3>
+            <p>${estado.revisao.acertos} acertos em ${estado.revisao.respondidas} perguntas respondidas.</p>
+            <div class="barra"><div style="width:${porcentagemAcerto}%"></div></div>
+            <strong>${porcentagemAcerto}% de acerto</strong>
+        </article>
+    `;
+
+    const continuar = document.getElementById("continuarEstudo");
+    const proximaAula = Object.entries(cursos).flatMap(([nome, curso]) =>
+        curso.aulas.map((aula, indice) => ({ nome, aula, indice }))
+    ).find(item => !estado.concluidas.includes(idAula(item.nome, item.indice)));
+    continuar.innerHTML = proximaAula
+        ? `<span class="tag">SUA PRÓXIMA AULA SUGERIDA</span>
+           <h3>${cursos[proximaAula.nome].emoji} ${proximaAula.nome}: ${escaparHTML(proximaAula.aula[0])}</h3>
+           <p>${escaparHTML(proximaAula.aula[2])}</p>
+           <button class="botao" onclick="abrirAula('${proximaAula.nome}', ${proximaAula.indice})">Continuar estudando →</button>`
+        : `<span class="tag">TRILHAS CONCLUÍDAS</span>
+           <h3>Você concluiu todas as aulas do catálogo! 🎉</h3>
+           <p>Continue praticando com projetos e revisões.</p>
+           <button class="botao" onclick="abrirPagina('projetos')">Explorar projetos →</button>`;
 
     renderizarFavoritos();
 }
@@ -1089,6 +1228,7 @@ function abrirAula(nome, indice) {
         <h2>💻 Exemplo comentado</h2>
         <div class="codigo">
             <button class="botao-secundario" onclick="copiarExemplo()">📋 Copiar código</button>
+            <button class="botao-secundario" onclick="abrirExemploNoLaboratorio('${nome}', ${indice})">Abrir no laboratório</button>
             <pre id="exemploCodigo">${escaparHTML(exemplo)}</pre>
         </div>
 
@@ -2315,6 +2455,117 @@ function renderizarWiki() {
     `;
 }
 
+function renderizarProjetos() {
+    const seletor = document.getElementById("filtroProjetos");
+    const filtro = seletor.value;
+    seletor.innerHTML = '<option value="">Todas as linguagens</option>' +
+        Object.keys(cursos).map(nome =>
+            `<option value="${escaparHTML(nome)}">${cursos[nome].emoji} ${escaparHTML(nome)}</option>`
+        ).join("");
+    seletor.value = filtro;
+
+    const projetos = projetosGuiados.filter(projeto => !filtro || projeto.curso === filtro);
+    document.getElementById("listaProjetos").innerHTML = projetos.map(projeto => {
+        const indice = projetosGuiados.indexOf(projeto);
+        return `
+            <article class="card projeto-card">
+                <span class="tag">${cursos[projeto.curso].emoji} ${escaparHTML(projeto.curso)} • ${escaparHTML(projeto.nivel)}</span>
+                <h3>${escaparHTML(projeto.titulo)}</h3>
+                <p>${escaparHTML(projeto.descricao)}</p>
+                <strong>Etapas sugeridas</strong>
+                <ol>${projeto.etapas.map(etapa => `<li>${escaparHTML(etapa)}</li>`).join("")}</ol>
+                <button class="botao" onclick="carregarProjeto(${indice})">Abrir ponto de partida no laboratório →</button>
+            </article>
+        `;
+    }).join("") || '<div class="card vazio">Nenhum projeto encontrado para esse filtro.</div>';
+}
+
+function renderizarPerguntaRevisao() {
+    const idioma = document.getElementById("idiomaRevisao").value;
+    const perguntas = revisoes[idioma] || [];
+    if (!perguntas.length) return;
+
+    let indice = Math.floor(Math.random() * perguntas.length);
+    if (perguntas.length > 1 && indice === indiceQuestaoAnterior) {
+        indice = (indice + 1) % perguntas.length;
+    }
+    indiceQuestaoAnterior = indice;
+    perguntaAtualRevisao = perguntas[indice];
+
+    document.getElementById("perguntaRevisao").innerHTML =
+        `<h2>${escaparHTML(perguntaAtualRevisao.pergunta)}</h2>`;
+    document.getElementById("opcoesRevisao").innerHTML =
+        perguntaAtualRevisao.opcoes.map((opcao, i) =>
+            `<button class="botao-secundario opcao-revisao" data-opcao="${i}">${escaparHTML(opcao)}</button>`
+        ).join("");
+    const resultado = document.getElementById("resultadoRevisao");
+    resultado.textContent = "";
+    resultado.className = "";
+    document.getElementById("proximaRevisao").hidden = true;
+}
+
+function responderRevisao(indiceEscolhido) {
+    if (!perguntaAtualRevisao || document.getElementById("proximaRevisao").hidden === false) return;
+    const correto = indiceEscolhido === perguntaAtualRevisao.resposta;
+    estado.revisao.respondidas += 1;
+    if (correto) estado.revisao.acertos += 1;
+    salvarEstado();
+
+    document.querySelectorAll("#opcoesRevisao [data-opcao]").forEach(botao => {
+        botao.disabled = true;
+        if (Number(botao.dataset.opcao) === perguntaAtualRevisao.resposta) {
+            botao.classList.add("sucesso");
+        }
+    });
+    const resultado = document.getElementById("resultadoRevisao");
+    resultado.textContent = `${correto ? "Correto!" : "Ainda não."} ${perguntaAtualRevisao.explicacao}`;
+    resultado.className = correto ? "sucesso" : "aviso";
+    document.getElementById("proximaRevisao").hidden = false;
+}
+
+const linguagensEditor = {
+    Python: "python",
+    Java: "java",
+    JavaScript: "javascript",
+    HTML: "html",
+    CSS: "css",
+    "C++": "cpp",
+    Lua: "lua"
+};
+
+function abrirCodigoNoLaboratorio(nome, codigo) {
+    const idioma = linguagensEditor[nome];
+    if (!idioma) {
+        alert(`Não há modelo de editor configurado para ${nome}.`);
+        return;
+    }
+    if (editorCodigo.value.trim() && editorCodigo.value !== codigo
+        && !confirm("Substituir o conteúdo atual do editor? O rascunho dessa linguagem será atualizado.")) {
+        return;
+    }
+    const idiomaAnterior = seletorLinguagem.value;
+    seletorLinguagem.value = idioma;
+    carregarCodigoEditor();
+    if (editorCodigo.value.trim() && editorCodigo.value !== codigo
+        && !confirm("Já existe um rascunho salvo nessa linguagem. Substituí-lo pelo ponto de partida?")) {
+        seletorLinguagem.value = idiomaAnterior;
+        carregarCodigoEditor();
+        return;
+    }
+    editorCodigo.value = codigo;
+    editorCodigo.dispatchEvent(new Event("input", { bubbles: true }));
+    abrirPagina("laboratorio");
+}
+
+function abrirExemploNoLaboratorio(nome, indice) {
+    abrirCodigoNoLaboratorio(nome, obterExemplo(nome, indice));
+}
+
+function carregarProjeto(indice) {
+    const projeto = projetosGuiados[indice];
+    if (projeto) abrirCodigoNoLaboratorio(projeto.curso, projeto.codigo);
+}
+
 const modelosLaboratorio = {
     python: 'nome = "Programador"\nprint(f"Olá, {nome}!")\nprint(2 + 3)',
     javascript: 'const nome = "Programador";\nconsole.log(`Olá, ${nome}!`);\nconsole.log(2 + 3);',
@@ -2738,6 +2989,18 @@ document.getElementById("pesquisaGlossario").addEventListener("input", evento =>
     renderizarGlossario(evento.target.value);
 });
 
+const idiomaRevisao = document.getElementById("idiomaRevisao");
+idiomaRevisao.innerHTML = Object.keys(revisoes).map(nome =>
+    `<option value="${escaparHTML(nome)}">${cursos[nome].emoji} ${escaparHTML(nome)}</option>`
+).join("");
+idiomaRevisao.addEventListener("change", renderizarPerguntaRevisao);
+document.getElementById("opcoesRevisao").addEventListener("click", evento => {
+    const botao = evento.target.closest("[data-opcao]");
+    if (botao) responderRevisao(Number(botao.dataset.opcao));
+});
+document.getElementById("proximaRevisao").addEventListener("click", renderizarPerguntaRevisao);
+document.getElementById("filtroProjetos").addEventListener("change", renderizarProjetos);
+
 const seletorWiki = document.getElementById("seletorWiki");
 seletorWiki.innerHTML = Object.keys(wikiLinguagens).map(nome =>
     `<option value="${nome}">${cursos[nome].emoji} ${nome}</option>`
@@ -2792,10 +3055,11 @@ document.getElementById("exportarProgresso").addEventListener("click", () => {
 });
 
 document.getElementById("reiniciarProgresso").addEventListener("click", () => {
-    if (confirm("Tem certeza de que deseja apagar suas aulas concluídas e favoritos?")) {
-        estado = { concluidas: [], favoritos: [] };
+    if (confirm("Tem certeza de que deseja apagar aulas concluídas, favoritos e resultados das revisões?")) {
+        estado = { concluidas: [], favoritos: [], revisao: { respondidas: 0, acertos: 0 } };
         salvarEstado();
         renderizarCards();
+        renderizarPerguntaRevisao();
 
         if (cursoAtual) abrirCurso(cursoAtual);
     }
@@ -2830,6 +3094,8 @@ carregarCodigoEditor();
 renderizarCards();
 renderizarGlossario();
 renderizarWiki();
+renderizarProjetos();
+renderizarPerguntaRevisao();
 atualizarPainel();
 </script>
 </body>
